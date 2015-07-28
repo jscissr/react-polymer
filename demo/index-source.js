@@ -15,6 +15,7 @@ import {PaperInput, PaperTextarea, IronAutogrowTextarea, PaperSlider, PaperToggl
 
 
 var App = React.createClass({
+  mixins: [polymerReact.classMixin],
   getInitialState() {
     return {
       text: 'Hello world',
@@ -142,6 +143,8 @@ var App = React.createClass({
         </table>
 
         <p><label><input type="checkbox" checked={this.state.editable} onChange={this.editableChange} /> fields editable</label></p>
+
+        <p>For testing classMixin (should keep styling): <PaperToggleButton className={'c' + Math.floor(Math.random() * 9999) + ' other-class'} ref={this.polymerClass} /></p>
       </div>
     );
   }

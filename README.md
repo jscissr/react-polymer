@@ -48,6 +48,26 @@ import {
 <PaperToggleButton checked={this.state.checked} onChange={this.checkedChange} />
 ```
 
+Another problem is if you set a `className` on a Polymer elements which
+dynamically changes.
+Polymer adds its own classes for styling, but if you change it in React these
+get overwritten.
+The solution is to add the `classMixin` to the component and
+`ref={this.polymerClass}` to the affected Polymer elements:
+
+```js
+import polymerReact from 'polymer-react';
+import React from 'react';
+
+var Component = React.createClass({
+  mixins: [polymerReact.classMixin],
+
+  ...
+
+  <paper-icon className={this.state.answer ? 'yes' : 'no'} ref={this.polymerClass} />
+
+```
+
 ## Testing
 
 ```shell

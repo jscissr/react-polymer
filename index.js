@@ -1,5 +1,6 @@
 'use strict';
 
+var CSSCore = require('react/lib/CSSCore.js');
 var DefaultEventPluginOrder = require('react/lib/DefaultEventPluginOrder');
 var DOMProperty = require('react/lib/DOMProperty');
 var EventConstants = require('react/lib/EventConstants');
@@ -9,6 +10,7 @@ var EventPropagators = require('react/lib/EventPropagators');
 var ReactBrowserEventEmitter = require('react/lib/ReactBrowserEventEmitter');
 var ReactInjection = require('react/lib/ReactInjection');
 var SyntheticEvent = require('react/lib/SyntheticEvent');
+var findDOMNode = require('react/lib/findDOMNode');
 var keyOf = require('react/lib/keyOf');
 
 
@@ -171,5 +173,31 @@ if (EventPluginUtils.injection.Mount) {
 //must be called before require('react') is called the first time
 DefaultEventPluginOrder.push('CustomPlugin');
 
+
+var classMixin = {
+  componentWillMount: function() {
+    this._polymerClassRefs = [];
+  },
+  polymerClass: function(element) {
+    this._polymerClassRefs.push(element);
+  },
+  componentDidUpdate: function() {
+    if (!global.Polymer) {
+      return;
+    }
+    for (var i = this._polymerClassRefs.length; i--; ) {
+      var element = findDOMNode(this._polymerClassRefs[i]);
+      if (!element || element._scopeCssViaAttr ||
+          CSSCore.hasClass(element, global.Polymer.StyleProperties.XSCOPE_NAME)) {
+        return;
+      }
+      global.Polymer.StyleProperties.applyElementScopeSelector(element,
+          element._scopeSelector);
+    }
+  }
+};
+
+
 exports.registerEvent = registerEvent;
 exports.registerAttribute = registerAttribute;
+exports.classMixin = classMixin;
