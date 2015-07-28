@@ -32,11 +32,11 @@ var ReactBrowserEventEmitter = require('react/lib/ReactBrowserEventEmitter');
 var assign = require('react/lib/Object.assign');
 //var invariant = require('react/lib/invariant');
 
-var polymerReact = require('./index.js');
-polymerReact.registerAttribute('bind-value');
-//polymerReact.registerAttribute('value');
-polymerReact.registerEvent('change', {onChange: true}, {onChangeCapture: true});
-polymerReact.registerEvent('bind-value-changed', {onBindValueChanged: true}, {onBindValueChangedCapture: true});
+var reactPolymer = require('./index.js');
+reactPolymer.registerAttribute('bind-value');
+//reactPolymer.registerAttribute('value');
+reactPolymer.registerEvent('change', {onChange: true}, {onChangeCapture: true});
+reactPolymer.registerEvent('bind-value-changed', {onBindValueChanged: true}, {onBindValueChangedCapture: true});
 
 var instancesByReactID = {};
 
