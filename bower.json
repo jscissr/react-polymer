@@ -1,0 +1,12 @@
+{
+  "name": "react-polymer",
+  "devDependencies": {
+    "paper-slider": "PolymerElements/paper-slider#^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^1.0.0",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^1.0.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.0.0",
+    "paper-radio-button": "PolymerElements/paper-radio-button#^1.0.0",
+    "paper-radio-group": "PolymerElements/paper-radio-group#^1.0.0",
+    "iron-selector": "PolymerElements/iron-selector#^1.0.0"
+  }
+}
