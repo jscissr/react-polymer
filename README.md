@@ -14,12 +14,12 @@ anymore.
 Now you need react-polymer:
 
 ```js
-import polymerReact from 'polymer-react'; //IMPORTANT: Must be imported before React.
+import reactPolymer from 'react-polymer'; //IMPORTANT: Must be imported before React.
 import React from 'react';
 
-polymerReact.registerAttribute('raised');
-polymerReact.registerAttribute('url');
-polymerReact.registerEvent('response', 'onResponse');
+reactPolymer.registerAttribute('raised');
+reactPolymer.registerAttribute('url');
+reactPolymer.registerEvent('response', 'onResponse');
 
 
 <paper-button raised>another button</paper-button>
@@ -31,7 +31,7 @@ That's because React internally has wrappers to make controlled components.
 We have our own wrapper for the Polymer form elements:
 
 ```js
-import polymerReact from 'polymer-react';
+import reactPolymer from 'react-polymer';
 import React from 'react';
 import {
   PaperInput,
@@ -41,7 +41,7 @@ import {
   PaperToggleButton,
   PaperCheckbox,
   PaperRadioButton,
-} from 'polymer-react/input';
+} from 'react-polymer/input';
 
 
 <PaperInput value={this.state.value} onChange={this.valueChanged} />
@@ -56,11 +56,11 @@ The solution is to add the `classMixin` to the component and
 `ref={this.polymerClass}` to the affected Polymer elements:
 
 ```js
-import polymerReact from 'polymer-react';
+import reactPolymer from 'react-polymer';
 import React from 'react';
 
 var Component = React.createClass({
-  mixins: [polymerReact.classMixin],
+  mixins: [reactPolymer.classMixin],
 
   ...
 

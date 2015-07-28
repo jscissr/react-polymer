@@ -1,10 +1,10 @@
-import polymerReact from '../';
+import reactPolymer from '../';
 
 import React from 'react';
 
-polymerReact.registerAttribute('is');
-polymerReact.registerAttribute('selected');
-polymerReact.registerAttribute('attr-for-selected');
+reactPolymer.registerAttribute('is');
+reactPolymer.registerAttribute('selected');
+reactPolymer.registerAttribute('attr-for-selected');
 
 import {PaperInput, PaperTextarea, IronAutogrowTextarea, PaperSlider, PaperToggleButton, PaperCheckbox, PaperRadioButton} from '../input';
 /*var PaperInput = 'paper-input',
@@ -15,7 +15,7 @@ import {PaperInput, PaperTextarea, IronAutogrowTextarea, PaperSlider, PaperToggl
 
 
 var App = React.createClass({
-  mixins: [polymerReact.classMixin],
+  mixins: [reactPolymer.classMixin],
   getInitialState() {
     return {
       text: 'Hello world',
