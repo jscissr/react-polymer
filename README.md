@@ -1,4 +1,10 @@
-# react-polymer
+# react-polymer [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][npm-url]
+
+[travis-image]: https://img.shields.io/travis/jscissr/react-polymer/master.svg
+[travis-url]: https://travis-ci.org/jscissr/react-polymer
+[npm-image]: https://img.shields.io/npm/v/react-polymer.svg
+[npm-url]: https://npmjs.org/package/react-polymer
+[downloads-image]: https://img.shields.io/npm/dm/react-polymer.svg
 
 *Use Polymer elements in React*
 
@@ -12,19 +18,15 @@ Polymer elements into React components and at first glance it just works:
 However, when you then start using custom attributes and events, it doesn't work
 anymore.
 
-- https://github.com/facebook/react/issues/4933
-- https://github.com/facebook/react/issues/140
-- https://github.com/facebook/react/issues/4751
-
 Now you need react-polymer:
 
 ```js
-import reactPolymer from 'react-polymer'; //IMPORTANT: Must be imported before React.
-import React from 'react';
+import reactPolymer from 'react-polymer' // Must be imported before React
+import React from 'react'
 
-reactPolymer.registerAttribute('drawer');
-reactPolymer.registerAttribute('main');
-reactPolymer.registerEvent('response', 'onResponse');
+reactPolymer.registerAttribute('drawer')
+reactPolymer.registerAttribute('main')
+reactPolymer.registerEvent('response', 'onResponse')
 
 
 <paper-drawer-panel>
@@ -39,8 +41,8 @@ That's because React internally has wrappers to make controlled components.
 We have our own wrapper for the Polymer form elements:
 
 ```js
-import reactPolymer from 'react-polymer';
-import React from 'react';
+import reactPolymer from 'react-polymer'
+import React from 'react'
 import {
   PaperCheckbox,
   PaperToggleButton,
@@ -53,7 +55,7 @@ import {
   PaperRadioGroup,
   PaperTabs,
   IronSelector
-} from 'react-polymer/input';
+} from 'react-polymer/input'
 
 
 <PaperInput value={this.state.value} onChange={this.valueChanged} />
@@ -82,3 +84,15 @@ Polymer elements can have properties with `notify` attribute, which trigger
 manually call `addEventListener` yourself.
 
 This module does a lot of monkey patching, so it only works with React 0.14.
+
+## Notes
+
+Some React issues that might simplify this once solved:
+
+- https://github.com/facebook/react/issues/4933
+- https://github.com/facebook/react/issues/140
+- https://github.com/facebook/react/issues/4751
+
+## License
+
+MIT.

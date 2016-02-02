@@ -17,7 +17,7 @@ function isPolymerElement (element) {
 }
 
 var customTopLevelTypes = {}
-var CustomPlugin = {
+var ReactPolymerPlugin = {
   eventTypes: {},
 
   /**
@@ -119,12 +119,12 @@ function registerEvent (name, bubbled, captured) {
     document
   )
 
-  CustomPlugin.eventTypes[bubbled] =
+  ReactPolymerPlugin.eventTypes[bubbled] =
       EventPluginRegistry.eventNameDispatchConfigs[bubbled] =
       customTopLevelTypes[topLevelType] = dispatchConfig
 
   EventPluginRegistry.registrationNameModules[bubbled] =
-      EventPluginRegistry.registrationNameModules[captured] = CustomPlugin
+      EventPluginRegistry.registrationNameModules[captured] = ReactPolymerPlugin
 
   EventPluginRegistry.registrationNameDependencies[bubbled] =
       EventPluginRegistry.registrationNameDependencies[captured] =
@@ -153,7 +153,7 @@ function injectAll () {
   isInjected = true
 
   require('react') // make sure it's loaded
-  ReactInjection.EventPluginHub.injectEventPluginsByName({CustomPlugin: CustomPlugin})
+  ReactInjection.EventPluginHub.injectEventPluginsByName({ReactPolymerPlugin: ReactPolymerPlugin})
 
   ReactInjection.DOMProperty.injectDOMPropertyConfig({
     isCustomAttribute: function (name) {
@@ -166,7 +166,7 @@ if (EventPluginUtils.injection.Mount) {
   throw new Error('react-polymer must be required before react')
 }
 // must be called before require('react') is called the first time
-DefaultEventPluginOrder.push(keyOf({CustomPlugin: null}))
+DefaultEventPluginOrder.push(keyOf({ReactPolymerPlugin: null}))
 
 // See https://github.com/Polymer/polymer/blob/55b91b3db7c3085b31a1d388ac0d9131bedb9f0b/src/standard/x-styling.html#L191
 var noNativeShadow = Polymer && !Polymer.Settings.useNativeShadow
