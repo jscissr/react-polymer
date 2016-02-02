@@ -1,7 +1,7 @@
-import reactPolymer from '../';
+import '../'
 
-import React from 'react';
-import {render} from 'react-dom';
+import React from 'react'
+import {render} from 'react-dom'
 
 import {
   IronAutogrowTextarea,
@@ -15,71 +15,57 @@ import {
   PaperRadioGroup,
   PaperTabs,
   IronSelector
-} from '../input';
+} from '../input'
 
 var App = React.createClass({
-  getInitialState() {
+  getInitialState () {
     return {
       text: 'Hello world',
       textarea: 'Hello world\nin 2 lines',
       value: 30,
       checked: false,
       editable: true,
-      selected: 'small',
-    };
-  },
-
-  textChange(event) {
-    console.log('textChange, new value: %s', event.target.value);
-    if (this.state.editable) {
-      this.setState({text: event.target.value});
-    }
-  },
-  textareaChange(event) {
-    console.log('textareaChange, new value: %s', event.target.value);
-    if (this.state.editable) {
-      this.setState({textarea: event.target.value});
-    }
-  },
-  valueChange(event) {
-    console.log('valueChange, new value: %s', event.target.value);
-    if (this.state.editable) {
-      this.setState({value: event.target.value});
-    }
-  },
-  checkedChange(event) {
-    console.log('checkedChange, new value: %s', event.target.checked);
-    if (this.state.editable) {
-      this.setState({checked: event.target.checked});
-    }
-  },
-  selectedChange(event) {
-    var selected = event.target.selected || event.target.value;
-    console.log('selectedChange, new value: %s', selected);
-    if (this.state.editable) {
-      this.setState({selected: selected});
+      selected: 'small'
     }
   },
 
-  editableChange(event) {
-    this.setState({editable: event.target.checked});
+  textChange (event) {
+    console.log('textChange, new value: %s', event.target.value)
+    if (this.state.editable) {
+      this.setState({text: event.target.value})
+    }
+  },
+  textareaChange (event) {
+    console.log('textareaChange, new value: %s', event.target.value)
+    if (this.state.editable) {
+      this.setState({textarea: event.target.value})
+    }
+  },
+  valueChange (event) {
+    console.log('valueChange, new value: %s', event.target.value)
+    if (this.state.editable) {
+      this.setState({value: event.target.value})
+    }
+  },
+  checkedChange (event) {
+    console.log('checkedChange, new value: %s', event.target.checked)
+    if (this.state.editable) {
+      this.setState({checked: event.target.checked})
+    }
+  },
+  selectedChange (event) {
+    var selected = event.target.selected || event.target.value
+    console.log('selectedChange, new value: %s', selected)
+    if (this.state.editable) {
+      this.setState({selected: selected})
+    }
   },
 
-  /*testToggle() {
-    this.setState({testChecked: React.findDOMNode(this.refs.test).checked});
+  editableChange (event) {
+    this.setState({editable: event.target.checked})
   },
-  testLimit(val) {
-    return (30 < val && val < 50) ? 30 : val;
-  },
-  testNativeValue() {//console.log('nativeValue');
-    this.setState({testValue: this.testLimit(React.findDOMNode(this.refs.nativeSlider).value)});
-  },
-  testValue() {
-    //var node = React.findDOMNode(this.refs.slider);
-    this.setState({testValue: this.testLimit(React.findDOMNode(this.refs.slider).immediateValue)});
-    //console.log('value immediate: %d value: %d', node.immediateValue, node.value);
-  },*/
-  render() {
+
+  render () {
     return (
       <div>
         <h1>react-polymer demo</h1>
@@ -187,12 +173,12 @@ var App = React.createClass({
           </tbody>
         </table>
 
-        <p><label><input type="checkbox" checked={this.state.editable} onChange={this.editableChange} /> fields editable</label></p>
+        <p><label><input type='checkbox' checked={this.state.editable} onChange={this.editableChange} /> fields editable</label></p>
 
         <p>Changing className (should keep styling): <PaperToggleButton className={'c' + Math.floor(Math.random() * 9999) + ' other-class'} /></p>
       </div>
-    );
+    )
   }
-});
+})
 
-render(<App />, document.getElementById('react-main'));
+render(<App />, document.getElementById('react-main'))

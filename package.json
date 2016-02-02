@@ -4,7 +4,7 @@
   "description": "Use Polymer elements in React",
   "main": "index.js",
   "scripts": {
-    "pretest": "vulcanize --inline-scripts --inline-css --strip-comments test/source.html | node test/transform-build > test/build.html",
+    "pretest": "standard && vulcanize --inline-scripts --inline-css --strip-comments test/source.html | node test/transform-build > test/build.html",
     "test": "zuul -- test/test.js",
     "pretest-local": "npm run pretest",
     "test-local": "zuul --local 8088 -- test/test.js"
@@ -32,6 +32,7 @@
     "react": "^0.14.6",
     "react-addons-test-utils": "^0.14.6",
     "react-dom": "^0.14.6",
+    "standard": "^5.4.1",
     "tape": "^4.4.0",
     "vulcanize": "^1.14.1",
     "zuul": "^3.9.0"

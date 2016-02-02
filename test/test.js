@@ -1,3 +1,5 @@
+/* global Event, CustomEvent */
+
 import test from 'tape'
 import reactPolymer from '../'
 import React from 'react'
