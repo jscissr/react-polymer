@@ -1,6 +1,7 @@
-# demo builod output
+# build output
 demo/index.html
 demo/index-browserify.js
+test/build.html
 
 # Logs
 logs

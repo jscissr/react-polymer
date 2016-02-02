@@ -1,8 +1,7 @@
 'use strict';
 
-var CSSCore = require('react/lib/CSSCore.js');
 var DefaultEventPluginOrder = require('react/lib/DefaultEventPluginOrder');
-var DOMProperty = require('react/lib/DOMProperty');
+var DOMPropertyOperations = require('react/lib/DOMPropertyOperations');
 var EventConstants = require('react/lib/EventConstants');
 var EventPluginRegistry = require('react/lib/EventPluginRegistry');
 var EventPluginUtils = require('react/lib/EventPluginUtils');
@@ -10,8 +9,8 @@ var EventPropagators = require('react/lib/EventPropagators');
 var ReactBrowserEventEmitter = require('react/lib/ReactBrowserEventEmitter');
 var ReactInjection = require('react/lib/ReactInjection');
 var SyntheticEvent = require('react/lib/SyntheticEvent');
-var findDOMNode = require('react/lib/findDOMNode');
-var keyOf = require('react/lib/keyOf');
+var keyOf = require('fbjs/lib/keyOf');
+var Polymer = global.Polymer;
 
 
 function isPolymerElement(element) {
@@ -34,7 +33,8 @@ var CustomPlugin = {
       topLevelType,
       topLevelTarget,
       topLevelTargetID,
-      nativeEvent) {
+      nativeEvent,
+      nativeEventTarget) {
     if (!customTopLevelTypes.hasOwnProperty(topLevelType) ||
         !isPolymerElement(topLevelTarget)) {
       return null;
@@ -42,7 +42,8 @@ var CustomPlugin = {
     var event = SyntheticEvent.getPooled(
       customTopLevelTypes[topLevelType],
       topLevelTargetID,
-      nativeEvent
+      nativeEvent,
+      nativeEventTarget
     );
     EventPropagators.accumulateTwoPhaseDispatches(event);
     return event;
@@ -51,6 +52,7 @@ var CustomPlugin = {
 
 
 var registeredEvents = [];
+var monkeyPatchedExisting = [];
 
 /**
  * Register an event to listen for on Polymer elements.
@@ -85,6 +87,9 @@ function registerEvent(name, bubbled, captured) {
 
   var existing = EventPluginRegistry.registrationNameModules[bubbled];
   if (existing) {
+    if (monkeyPatchedExisting.indexOf(existing) !== -1) return;
+    monkeyPatchedExisting.push(existing);
+
     //monkey-patch over existing function
     var previous = existing.extractEvents;
 
@@ -92,14 +97,16 @@ function registerEvent(name, bubbled, captured) {
         localTopLevelType,
         topLevelTarget,
         topLevelTargetID,
-        nativeEvent) {
+        nativeEvent,
+        nativeEventTarget) {
       if (nativeEvent.type !== name || !isPolymerElement(topLevelTarget)) {
-        return previous(localTopLevelType, topLevelTarget, topLevelTargetID, nativeEvent);
+        return previous(localTopLevelType, topLevelTarget, topLevelTargetID, nativeEvent, nativeEventTarget);
       }
       var event = SyntheticEvent.getPooled(
         dispatchConfig,
         topLevelTargetID,
-        nativeEvent
+        nativeEvent,
+        nativeEventTarget
       );
       EventPropagators.accumulateTwoPhaseDispatches(event);
       return event;
@@ -131,22 +138,15 @@ function registerEvent(name, bubbled, captured) {
 var attributes = [];
 
 /**
- * Register a custom attribute of Polymer elements.
- * @param {object|string} name the attribute name
+ * Register a custom attribute of native elements.
+ * @param string name the attribute name
  */
 function registerAttribute(name) {
   injectAll();
-  if (typeof name !== 'string') {
-    name = keyOf(name);
-  }
   if (attributes.indexOf(name) !== -1) {
     return;
   }
   attributes.push(name);
-  if (DOMProperty.hasBooleanValue[name]) {
-    DOMProperty.hasBooleanValue[name] = false;
-    DOMProperty.hasOverloadedBooleanValue[name] = true;
-  }
 }
 
 
@@ -171,33 +171,29 @@ if (EventPluginUtils.injection.Mount) {
   throw new Error('react-polymer must be required before react');
 }
 //must be called before require('react') is called the first time
-DefaultEventPluginOrder.push('CustomPlugin');
+DefaultEventPluginOrder.push(keyOf({CustomPlugin: null}));
 
 
-var classMixin = {
-  componentWillMount: function() {
-    this._polymerClassRefs = [];
-  },
-  polymerClass: function(element) {
-    this._polymerClassRefs.push(element);
-  },
-  componentDidUpdate: function() {
-    if (!global.Polymer) {
-      return;
-    }
-    for (var i = this._polymerClassRefs.length; i--; ) {
-      var element = findDOMNode(this._polymerClassRefs[i]);
-      if (!element || element._scopeCssViaAttr ||
-          CSSCore.hasClass(element, global.Polymer.StyleProperties.XSCOPE_NAME)) {
-        return;
-      }
-      global.Polymer.StyleProperties.applyElementScopeSelector(element,
-          element._scopeSelector);
-    }
+// See https://github.com/Polymer/polymer/blob/55b91b3db7c3085b31a1d388ac0d9131bedb9f0b/src/standard/x-styling.html#L191
+var noNativeShadow = Polymer && !Polymer.Settings.useNativeShadow;
+var oldSetValueForAttribute = DOMPropertyOperations.setValueForAttribute;
+
+DOMPropertyOperations.setValueForAttribute = function (node, name, value) {
+  if (name !== 'className') return oldSetValueForAttribute(node, name, value);
+
+  node.className = '' + (value || '');
+  if (noNativeShadow && !node._scopeCssViaAttr && node._scopeSelector) {
+    Polymer.StyleProperties.applyElementScopeSelector(node, node._scopeSelector, null, false);
   }
+};
+
+var oldCreateMarkupForCustomAttribute = DOMPropertyOperations.createMarkupForCustomAttribute;
+
+DOMPropertyOperations.createMarkupForCustomAttribute = function (name, value) {
+  if (name === 'className') name = 'class';
+  return oldCreateMarkupForCustomAttribute(name, value);
 };
 
 
 exports.registerEvent = registerEvent;
 exports.registerAttribute = registerAttribute;
-exports.classMixin = classMixin;

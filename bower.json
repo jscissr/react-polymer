@@ -7,6 +7,12 @@
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.0.0",
     "paper-radio-button": "PolymerElements/paper-radio-button#^1.0.0",
     "paper-radio-group": "PolymerElements/paper-radio-group#^1.0.0",
+    "paper-progress": "PolymerElements/paper-progress#^1.0.8",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.1.3",
+    "paper-menu": "PolymerElements/paper-menu#^1.2.2",
+    "paper-item": "PolymerElements/paper-item#^1.1.3",
+    "paper-tabs": "PolymerElements/paper-tabs#^1.3.3",
+    "paper-listbox": "PolymerElements/paper-listbox#^1.1.1",
     "iron-selector": "PolymerElements/iron-selector#^1.0.0"
   }
 }

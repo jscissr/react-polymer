@@ -2,7 +2,7 @@
 
 var browserify = require('browserify');
 //var watchify = require('watchify');
-var babelify = require('babelify').configure({stage: 1});
+var babelify = require('babelify').configure({presets: ['es2015', 'react'], plugins: ['transform-object-assign']});
 var fs = require('fs');
 var path = require('path');
 var vulcanize = require('vulcanize');

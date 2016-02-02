@@ -1,0 +1,22 @@
+ui: tape
+browserify:
+  - transform:
+      name: babelify
+      presets:
+        - es2015
+        - react
+      plugins:
+        - transform-object-assign
+html: test/build.html
+browsers:
+  - name: chrome
+    version: -2..beta
+    platform: Mac 10.11 # chrome beta on Mac 10.8 fails to start
+  - name: firefox
+    version: latest
+  - name: safari
+    version: latest
+  - name: ie
+    version: latest
+  - name: microsoftedge
+    version: latest
