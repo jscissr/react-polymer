@@ -65,7 +65,7 @@ import {
 Another problem that is solved automatically by react-polymer is that
 `className` doesn't work on Polymer elements.
 
-See [more examples](blob/master/demo/index-source.js).
+See [more examples](https://github.com/jscissr/react-polymer/blob/master/demo/index-source.js).
 
 ## Testing
 
