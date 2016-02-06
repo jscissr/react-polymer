@@ -19,7 +19,7 @@ function createToggleClass (PolymerToggle, displayName) {
       if (this.props.checked != null) event.target.checked = this.props.checked
     },
     render () {
-      return <PolymerToggle {...this.props} checked={this.props.checked || null} onChange={this._onChange} />
+      return <PolymerToggle {...this.props} onChange={this._onChange} />
     }
   })
 }

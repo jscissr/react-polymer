@@ -176,6 +176,7 @@ var useShadyDOM = Polymer && !Polymer.Settings.useNativeShadow
 var oldSetValueForAttribute = DOMPropertyOperations.setValueForAttribute
 
 DOMPropertyOperations.setValueForAttribute = function (node, name, value) {
+  if (value === false) value = null
   if (name !== 'className') return oldSetValueForAttribute(node, name, value)
 
   node.className = '' + (value || '')
@@ -188,6 +189,7 @@ var oldCreateMarkupForCustomAttribute = DOMPropertyOperations.createMarkupForCus
 
 DOMPropertyOperations.createMarkupForCustomAttribute = function (name, value) {
   if (name === 'className') name = 'class'
+  if (value === false) value = null
   return oldCreateMarkupForCustomAttribute(name, value)
 }
 

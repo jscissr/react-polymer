@@ -60,6 +60,42 @@ test('React reads & writes custom attributes on Polymer elements', t => {
         ref={immediateRef(ref => t.equal(ref.secondaryRatio, 40))} />)
 })
 
+test('attribute=false means no attribute set', t => {
+  // ...instead of the string 'false'.
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var checkbox = renderContainer(<paper-checkbox disabled={false} />)
+
+  setImmediate(() => {
+    t.equal(checkbox.disabled, false)
+  })
+})
+
+test('dynamic attribute=false means no attribute set', t => {
+  // ...instead of the string 'false'.
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {disabled: true}
+    },
+    componentDidMount () {
+      this.setState({disabled: false})
+    },
+    render () {
+      return <paper-checkbox disabled={this.state.disabled} />
+    }
+  })
+
+  var checkbox = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    t.equal(checkbox.disabled, false)
+  })
+})
+
 test('react-polymer adds custom event listeners', t => {
   t.plan(1)
   t.timeoutAfter(2000)
@@ -294,18 +330,6 @@ function testToggle (name, Checkbox) {
     valueBefore: false,
     valueAfter: true,
     interact: checkbox => checkbox.click()
-  })
-
-  test(`${name} checked=false means not checked`, t => {
-    // ...instead of the string 'false'.
-    t.plan(1)
-    t.timeoutAfter(2000)
-
-    var checkbox = renderContainer(<Checkbox checked={false} />)
-
-    setImmediate(() => {
-      t.equal(checkbox.checked, false)
-    })
   })
 }
 
