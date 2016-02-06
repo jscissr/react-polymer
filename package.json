@@ -9,6 +9,9 @@
     "pretest-local": "npm run pretest",
     "test-local": "zuul --local 8088 -- test/test.js"
   },
+  "browserify": {
+    "transform": [["babelify", {"presets": ["es2015", "react"]}]]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jscissr/react-polymer.git"
@@ -25,9 +28,6 @@
   "bugs": "https://github.com/jscissr/react-polymer/issues",
   "homepage": "https://github.com/jscissr/react-polymer#readme",
   "devDependencies": {
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
-    "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "react": "^0.14.6",
     "react-addons-test-utils": "^0.14.6",
@@ -41,6 +41,9 @@
     "react": "^0.14.0"
   },
   "dependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babelify": "^7.2.0",
     "fbjs": "^0.6.1"
   }
 }
