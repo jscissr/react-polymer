@@ -2,6 +2,7 @@
 
 var DefaultEventPluginOrder = require('react/lib/DefaultEventPluginOrder')
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations')
+var DOMChildrenOperations = require('react/lib/DOMChildrenOperations')
 var EventConstants = require('react/lib/EventConstants')
 var EventPluginRegistry = require('react/lib/EventPluginRegistry')
 var EventPluginUtils = require('react/lib/EventPluginUtils')
@@ -168,15 +169,17 @@ if (EventPluginUtils.injection.Mount) {
 // must be called before require('react') is called the first time
 DefaultEventPluginOrder.push(keyOf({ReactPolymerPlugin: null}))
 
+if (!Polymer) console.warn('react-polymer: Polymer is not loaded')
+
 // See https://github.com/Polymer/polymer/blob/55b91b3db7c3085b31a1d388ac0d9131bedb9f0b/src/standard/x-styling.html#L191
-var noNativeShadow = Polymer && !Polymer.Settings.useNativeShadow
+var useShadyDOM = Polymer && !Polymer.Settings.useNativeShadow
 var oldSetValueForAttribute = DOMPropertyOperations.setValueForAttribute
 
 DOMPropertyOperations.setValueForAttribute = function (node, name, value) {
   if (name !== 'className') return oldSetValueForAttribute(node, name, value)
 
   node.className = '' + (value || '')
-  if (noNativeShadow && !node._scopeCssViaAttr && node._scopeSelector) {
+  if (useShadyDOM && !node._scopeCssViaAttr && node._scopeSelector) {
     Polymer.StyleProperties.applyElementScopeSelector(node, node._scopeSelector, null, false)
   }
 }
@@ -186,6 +189,10 @@ var oldCreateMarkupForCustomAttribute = DOMPropertyOperations.createMarkupForCus
 DOMPropertyOperations.createMarkupForCustomAttribute = function (name, value) {
   if (name === 'className') name = 'class'
   return oldCreateMarkupForCustomAttribute(name, value)
+}
+
+if (useShadyDOM) {
+  DOMChildrenOperations.processUpdates = require('./ShadyDOMChildrenOperations').processUpdates
 }
 
 exports.registerEvent = registerEvent

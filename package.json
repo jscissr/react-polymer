@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/jscissr/react-polymer.git"
   },
-  "files": ["input.js"],
+  "files": ["input.js", "ShadyDOMChildrenOperations.js"],
   "keywords": [
     "react",
     "polymer",

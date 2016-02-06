@@ -131,6 +131,96 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
   renderContainer(<Wrapper />)
 })
 
+test('react-polymer patches React to use Polymer.dom API', t => {
+  t.plan(2)
+  t.timeoutAfter(2000)
+
+  var instance
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {hasChild: false}
+    },
+    render () {
+      instance = this
+      return (
+        <paper-radio-group>
+          {this.state.hasChild && <paper-checkbox />}
+        </paper-radio-group>
+      )
+    }
+  })
+
+  var selector = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    instance.setState({hasChild: true})
+    setImmediate(() => {
+      var checkbox = selector.querySelector('paper-checkbox')
+      t.ok(checkbox)
+      checkbox.fire('down')
+      setImmediate(() => {
+        t.ok(selector.querySelector('paper-checkbox'))
+      })
+    })
+  })
+})
+
+test('Polymer.dom API is used for textContent', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var instance
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {hasChild: false}
+    },
+    render () {
+      instance = this
+      return <paper-tab>{this.state.hasChild && 'hello'}</paper-tab>
+    }
+  })
+
+  var tab = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    instance.setState({hasChild: true})
+    tab.distributeContent()
+    setImmediate(() => {
+      t.ok(tab.firstElementChild.textContent.indexOf('hello') !== -1)
+    })
+  })
+})
+
+test('Polymer.dom API is used for removing non-root elements', t => {
+  // Meaning that the Polymer component has a wrapper arround <content />.
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var instance
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {hasChild: true}
+    },
+    render () {
+      instance = this
+      return <paper-tab>{this.state.hasChild && <div className='something' />}</paper-tab>
+    }
+  })
+
+  var tab = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    instance.setState({hasChild: false})
+    tab.distributeContent()
+    setImmediate(() => {
+      t.ok(!tab.querySelector('.something'))
+    })
+  })
+})
+
 // ### Polymer input wrapper ###
 
 function generalInputTest ({name, element, valueProp, valueBefore, valueAfter, interact}) {
