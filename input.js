@@ -48,14 +48,15 @@ function createTextClass (PolymerText, displayName) {
       })
     },
     render () {
-      var props = Object.assign({}, this.props)
-      props.onChange = null
-      props.onBindValueChanged = this._onChange
+      var props = {
+        onChange: null,
+        onBindValueChanged: this._onChange
+      }
       if (PolymerText === 'iron-autogrow-textarea') {
         props.value = null
         props['bind-value'] = this.props.value
       }
-      return <PolymerText {...props} />
+      return <PolymerText {...this.props} {...props} />
     }
   })
 }

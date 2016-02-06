@@ -25,7 +25,6 @@
   "bugs": "https://github.com/jscissr/react-polymer/issues",
   "homepage": "https://github.com/jscissr/react-polymer#readme",
   "devDependencies": {
-    "babel-plugin-transform-object-assign": "^6.3.13",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
