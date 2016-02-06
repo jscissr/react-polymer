@@ -1,6 +1,6 @@
 {
   "name": "react-polymer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Use Polymer elements in React",
   "main": "index.js",
   "scripts": {
@@ -10,13 +10,26 @@
     "test-local": "zuul --local 8088 -- test/test.js"
   },
   "browserify": {
-    "transform": [["babelify", {"presets": ["es2015", "react"]}]]
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015",
+            "react"
+          ]
+        }
+      ]
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jscissr/react-polymer.git"
   },
-  "files": ["input.js", "ShadyDOMChildrenOperations.js"],
+  "files": [
+    "input.js",
+    "ShadyDOMChildrenOperations.js"
+  ],
   "keywords": [
     "react",
     "polymer",
