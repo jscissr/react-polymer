@@ -93,6 +93,10 @@ Some React issues that might simplify this once solved:
 - https://github.com/facebook/react/issues/140
 - https://github.com/facebook/react/issues/4751
 
+## Similar Libraries
+
+For mixing Polymer and React, there is [Maple](https://github.com/Wildhoney/Maple.js), which doesn't seem to be maintained anymore. However, if all you are looking for is a way to incorporate pre-built Material Design components into React, there are also [Material-UI](https://github.com/callemall/material-ui) and [React-Materialize](https://github.com/react-materialize/react-materialize). 
+
 ## License
 
 MIT.
