@@ -399,7 +399,7 @@ function testSelector (name, Selector, Item) {
     valueProp: 'selected',
     valueBefore: 'medium',
     valueAfter: 'small',
-    interact: selector => selector.querySelector(`${Item}:first-child`).click()
+    interact: selector => selector.querySelector(Item).click()
   })
 }
 
