@@ -83,7 +83,7 @@ Polymer elements can have properties with `notify` attribute, which trigger
 `{property}-changed` events. However these events don't bubble, so you have to
 manually call `addEventListener` yourself.
 
-This module does a lot of monkey patching, so it only works with React 0.14.
+This module does a lot of monkey patching, so it only works with React 15.
 
 ## Notes
 
@@ -95,7 +95,7 @@ Some React issues that might simplify this once solved:
 
 ## Similar Libraries
 
-For mixing Polymer and React, there is [Maple](https://github.com/Wildhoney/Maple.js), which doesn't seem to be maintained anymore. However, if all you are looking for is a way to incorporate pre-built Material Design components into React, there are also [Material-UI](https://github.com/callemall/material-ui) and [React-Materialize](https://github.com/react-materialize/react-materialize). 
+For mixing Polymer and React, there is [Maple](https://github.com/Wildhoney/Maple.js), which doesn't seem to be maintained anymore. However, if all you are looking for is a way to incorporate pre-built Material Design components into React, there are also [Material-UI](https://github.com/callemall/material-ui) and [React-Materialize](https://github.com/react-materialize/react-materialize).
 
 ## License
 

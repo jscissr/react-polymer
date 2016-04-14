@@ -167,7 +167,23 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
   renderContainer(<Wrapper />)
 })
 
-test('react-polymer patches React to use Polymer.dom API', t => {
+test('use Polymer.dom API for initial subtree render', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var menu = renderContainer(
+    <paper-menu>
+      <paper-item />
+    </paper-menu>
+  )
+
+  setImmediate(() => {
+    var checkbox = menu.querySelector('div > paper-item')
+    t.ok(checkbox)
+  })
+})
+
+test('use Polymer.dom API for element insertion', t => {
   t.plan(2)
   t.timeoutAfter(2000)
 
@@ -202,7 +218,19 @@ test('react-polymer patches React to use Polymer.dom API', t => {
   })
 })
 
-test('Polymer.dom API is used for textContent', t => {
+test('Polymer.dom API is used for initial textContent', t => {
+  t.plan(2)
+  t.timeoutAfter(2000)
+
+  var menu = renderContainer(<paper-menu>hello</paper-menu>)
+
+  setImmediate(() => {
+    t.ok(menu.querySelector('div'))
+    t.ok(menu.querySelector('div').textContent.indexOf('hello') !== -1)
+  })
+})
+
+test('Polymer.dom API is used for textContent updates', t => {
   t.plan(1)
   t.timeoutAfter(2000)
 
@@ -225,6 +253,141 @@ test('Polymer.dom API is used for textContent', t => {
     tab.distributeContent()
     setImmediate(() => {
       t.ok(tab.firstElementChild.textContent.indexOf('hello') !== -1)
+    })
+  })
+})
+
+test('Polymer.dom API is used for initial innerHTML', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var menu = renderContainer(<paper-menu dangerouslySetInnerHTML={{__html: '<br>'}} />)
+
+  setImmediate(() => {
+    t.ok(menu.querySelector('div > br'))
+  })
+})
+
+test('Polymer.dom API is used for innerHTML updates', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var instance
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {html: undefined}
+    },
+    render () {
+      instance = this
+      return <paper-menu dangerouslySetInnerHTML={this.state.html && {__html: '<br>'}} />
+    }
+  })
+
+  var menu = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    instance.setState({html: true})
+    setImmediate(() => {
+      t.ok(menu.querySelector('div > br'))
+    })
+  })
+})
+
+test('Polymer.dom API is used for moving elements', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var instance
+  var childs = [<span key='a' />, <paper-item key='b' />]
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {swap: false}
+    },
+    render () {
+      instance = this
+      return (
+        <paper-menu>
+          {childs}
+        </paper-menu>
+      )
+    }
+  })
+
+  var menu = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    childs.push(childs.shift())
+    instance.setState({swap: true})
+    setImmediate(() => {
+      t.ok(menu.querySelector('div > paper-item + span'))
+    })
+  })
+})
+
+test('Polymer.dom API is used for initial multiple textContent', t => {
+  t.plan(2)
+  t.timeoutAfter(2000)
+
+  var menu = renderContainer(<paper-menu>hello{'world'}</paper-menu>)
+
+  setImmediate(() => {
+    t.ok(menu.querySelector('div'))
+    t.ok(menu.querySelector('div').textContent.indexOf('helloworld') !== -1)
+  })
+})
+
+test('Polymer.dom API is used for multiple textContent add/remove/update', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var instance
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {first: '', second: 'foo', third: 'bar'}
+    },
+    render () {
+      instance = this
+      return <paper-tab>{this.state.first}{this.state.second}{this.state.third}</paper-tab>
+    }
+  })
+
+  var tab = renderContainer(<Wrapper />)
+
+  setImmediate(() => {
+    instance.setState({first: 'hello', second: '', third: 'world'})
+    tab.distributeContent()
+    setImmediate(() => {
+      t.ok(tab.firstElementChild.textContent.indexOf('helloworld') !== -1)
+    })
+  })
+})
+
+test('Polymer.dom API is used for switching child type', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var instance
+
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {content: <br />}
+    },
+    render () {
+      instance = this
+      return this.state.content
+    }
+  })
+
+  var tab = renderContainer(<paper-tab><Wrapper /></paper-tab>)
+
+  setImmediate(() => {
+    instance.setState({content: <span>bar</span>})
+    tab.distributeContent()
+    setImmediate(() => {
+      t.ok(tab.querySelector('div > span'))
     })
   })
 })
@@ -252,7 +415,7 @@ test('Polymer.dom API is used for removing non-root elements', t => {
     instance.setState({hasChild: false})
     tab.distributeContent()
     setImmediate(() => {
-      t.ok(!tab.querySelector('.something'))
+      t.notOk(tab.querySelector('.something'))
     })
   })
 })

@@ -3,6 +3,8 @@
 var DefaultEventPluginOrder = require('react/lib/DefaultEventPluginOrder')
 var DOMPropertyOperations = require('react/lib/DOMPropertyOperations')
 var DOMChildrenOperations = require('react/lib/DOMChildrenOperations')
+var DOMLazyTree = require('react/lib/DOMLazyTree')
+var ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree')
 var EventConstants = require('react/lib/EventConstants')
 var EventPluginRegistry = require('react/lib/EventPluginRegistry')
 var EventPluginUtils = require('react/lib/EventPluginUtils')
@@ -21,27 +23,20 @@ var customTopLevelTypes = {}
 var ReactPolymerPlugin = {
   eventTypes: {},
 
-  /**
-   * @param {string} topLevelType Record from `EventConstants`.
-   * @param {DOMEventTarget} topLevelTarget The listening component root node.
-   * @param {string} topLevelTargetID ID of `topLevelTarget`.
-   * @param {object} nativeEvent Native browser event.
-   * @return {*} An accumulation of synthetic events.
-   * @see {EventPluginHub.extractEvents}
-   */
   extractEvents: function (
       topLevelType,
-      topLevelTarget,
-      topLevelTargetID,
+      targetInst,
       nativeEvent,
       nativeEventTarget) {
+    var targetNode = targetInst && ReactDOMComponentTree.getNodeFromInstance(targetInst)
+
     if (!customTopLevelTypes.hasOwnProperty(topLevelType) ||
-        !isPolymerElement(topLevelTarget)) {
+        !isPolymerElement(targetNode)) {
       return null
     }
     var event = SyntheticEvent.getPooled(
       customTopLevelTypes[topLevelType],
-      topLevelTargetID,
+      targetInst,
       nativeEvent,
       nativeEventTarget
     )
@@ -92,16 +87,17 @@ function registerEvent (name, bubbled, captured) {
 
     existing.extractEvents = function (
         localTopLevelType,
-        topLevelTarget,
-        topLevelTargetID,
+        targetInst,
         nativeEvent,
         nativeEventTarget) {
-      if (nativeEvent.type !== name || !isPolymerElement(topLevelTarget)) {
-        return previous(localTopLevelType, topLevelTarget, topLevelTargetID, nativeEvent, nativeEventTarget)
+      var targetNode = targetInst && ReactDOMComponentTree.getNodeFromInstance(targetInst)
+
+      if (nativeEvent.type !== name || !isPolymerElement(targetNode)) {
+        return previous(localTopLevelType, targetInst, nativeEvent, nativeEventTarget)
       }
       var event = SyntheticEvent.getPooled(
         dispatchConfig,
-        topLevelTargetID,
+        targetInst,
         nativeEvent,
         nativeEventTarget
       )
@@ -194,7 +190,16 @@ DOMPropertyOperations.createMarkupForCustomAttribute = function (name, value) {
 }
 
 if (useShadyDOM) {
-  DOMChildrenOperations.processUpdates = require('./ShadyDOMChildrenOperations').processUpdates
+  var ShadyDOMChildrenOperations = require('./ShadyDOMChildrenOperations')
+  DOMChildrenOperations.replaceDelimitedText = ShadyDOMChildrenOperations.replaceDelimitedText
+  DOMChildrenOperations.processUpdates = ShadyDOMChildrenOperations.processUpdates
+
+  var ShadyDOMLazyTree = require('./ShadyDOMLazyTree')
+  DOMLazyTree.insertTreeBefore = ShadyDOMLazyTree.insertTreeBefore
+  DOMLazyTree.replaceChildWithTree = ShadyDOMLazyTree.replaceChildWithTree
+  DOMLazyTree.queueChild = ShadyDOMLazyTree.queueChild
+  DOMLazyTree.queueHTML = ShadyDOMLazyTree.queueHTML
+  DOMLazyTree.queueText = ShadyDOMLazyTree.queueText
 }
 
 exports.registerEvent = registerEvent

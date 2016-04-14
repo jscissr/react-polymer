@@ -44,7 +44,7 @@ var App = React.createClass({
   valueChange (event) {
     console.log('valueChange, new value: %s', event.target.value)
     if (this.state.editable) {
-      this.setState({value: event.target.value})
+      this.setState({value: +event.target.value})
     }
   },
   checkedChange (event) {

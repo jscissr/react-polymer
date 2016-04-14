@@ -7,7 +7,7 @@
     "pretest": "standard && vulcanize --inline-scripts --inline-css --strip-comments test/source.html | node test/transform-build > test/build.html",
     "test": "zuul -- test/test.js",
     "pretest-local": "npm run pretest",
-    "test-local": "zuul --local 8088 -- test/test.js"
+    "test-local": "zuul --no-coverage --local 8088 -- test/test.js"
   },
   "browserify": {
     "transform": [
@@ -28,7 +28,8 @@
   },
   "files": [
     "input.js",
-    "ShadyDOMChildrenOperations.js"
+    "ShadyDOMChildrenOperations.js",
+    "ShadyDOMLazyTree.js"
   ],
   "keywords": [
     "react",
@@ -42,21 +43,21 @@
   "homepage": "https://github.com/jscissr/react-polymer#readme",
   "devDependencies": {
     "browserify": "^13.0.0",
-    "react": "^0.14.6",
-    "react-addons-test-utils": "^0.14.6",
-    "react-dom": "^0.14.6",
+    "react": "^15.0.1",
+    "react-addons-test-utils": "^15.0.1",
+    "react-dom": "^15.0.1",
     "standard": "^5.4.1",
     "tape": "^4.4.0",
     "vulcanize": "^1.14.1",
     "zuul": "^3.9.0"
   },
   "peerDependencies": {
-    "react": "^0.14.0"
+    "react": "^15.0.1"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
-    "fbjs": "^0.6.1"
+    "fbjs": "^0.8.0"
   }
 }
