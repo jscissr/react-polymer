@@ -41,7 +41,7 @@ function onError (err) {
 
 function doVulcanize () {
   process.chdir(__dirname)
-  vulcanize.setOptions({})
+  vulcanize.setOptions({inlineScripts: true, inlineCss: true, stripComments: true})
   vulcanize.process('index-source.html', function (err, inlinedHtml) {
     onError(err)
     fs.writeFile(path.join(__dirname, 'index.html'), inlinedHtml, function (err) {
