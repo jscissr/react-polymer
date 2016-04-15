@@ -150,6 +150,7 @@ function injectAll () {
   isInjected = true
 
   require('react') // make sure it's loaded
+  require('react/lib/ReactDOM')
   ReactInjection.EventPluginHub.injectEventPluginsByName({ReactPolymerPlugin: ReactPolymerPlugin})
 
   ReactInjection.DOMProperty.injectDOMPropertyConfig({
