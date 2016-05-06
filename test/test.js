@@ -167,6 +167,31 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
   renderContainer(<Wrapper />)
 })
 
+test('react-polymer keeps Polymer classes when React classes are removed', t => {
+  t.plan(1)
+  t.timeoutAfter(2000)
+
+  var checkBox
+  var Wrapper = React.createClass({
+    getInitialState () {
+      return {hasClass: true}
+    },
+    componentDidMount () {
+      setImmediate(() => {
+        this.setState({hasClass: false})
+        setImmediate(() => {
+          t.equal(checkBox.className, 'x-scope paper-checkbox-0')
+        })
+      })
+    },
+    render () {
+      if (this.state.hasClass) return <paper-checkbox className='red' ref={ref => (checkBox = ref)} />
+      return <paper-checkbox ref={ref => (checkBox = ref)} />
+    }
+  })
+  renderContainer(<Wrapper />)
+})
+
 test('use Polymer.dom API for initial subtree render', t => {
   t.plan(1)
   t.timeoutAfter(2000)

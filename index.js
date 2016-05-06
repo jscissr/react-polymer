@@ -177,6 +177,17 @@ DOMPropertyOperations.setValueForAttribute = function (node, name, value) {
   if (name !== 'className') return oldSetValueForAttribute(node, name, value)
 
   node.className = '' + (value || '')
+  addPolymerScope(node)
+}
+
+var oldDeleteValueForProperty = DOMPropertyOperations.deleteValueForProperty
+
+DOMPropertyOperations.deleteValueForProperty = function (node, name) {
+  oldDeleteValueForProperty(node, name)
+  if (name === 'className') addPolymerScope(node)
+}
+
+function addPolymerScope (node) {
   if (useShadyDOM && !node._scopeCssViaAttr && node._scopeSelector) {
     Polymer.StyleProperties.applyElementScopeSelector(node, node._scopeSelector, null, false)
   }
