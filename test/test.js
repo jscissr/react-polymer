@@ -56,8 +56,8 @@ test('React reads & writes custom attributes on Polymer elements', t => {
   t.timeoutAfter(2000)
 
   renderContainer(
-      <paper-progress secondary-progress='40'
-        ref={immediateRef(ref => t.equal(ref.secondaryRatio, 40))} />)
+    <paper-progress secondary-progress='40'
+      ref={immediateRef(ref => t.equal(ref.secondaryRatio, 40))} />)
 })
 
 test('attribute=false means no attribute set', t => {
@@ -161,7 +161,7 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
       })
     },
     render () {
-      return <paper-checkbox className={this.state.lamp} ref={ref => checkBox = ref} />
+      return <paper-checkbox className={this.state.lamp} ref={ref => (checkBox = ref)} />
     }
   })
   renderContainer(<Wrapper />)

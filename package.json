@@ -46,7 +46,7 @@
     "react": "^15.0.1",
     "react-addons-test-utils": "^15.0.1",
     "react-dom": "^15.0.1",
-    "standard": "^5.4.1",
+    "standard": "^7.0.1",
     "tape": "^4.4.0",
     "vulcanize": "^1.14.1",
     "zuul": "^3.9.0"
