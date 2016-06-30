@@ -1,6 +1,7 @@
 var reactPolymer = require('./')
 var React = require('react')
 var ReactUpdates = require('react/lib/ReactUpdates')
+var assign = require('object-assign')
 
 reactPolymer.registerEvent('change', {onChange: true}, {onChangeCapture: true})
 reactPolymer.registerEvent('bind-value-changed', {onBindValueChanged: true}, {onBindValueChangedCapture: true})
@@ -19,7 +20,7 @@ function createToggleClass (PolymerToggle, displayName) {
       if (this.props.checked != null) event.target.checked = this.props.checked
     },
     render () {
-      return <PolymerToggle {...this.props} onChange={this._onChange} />
+      return React.createElement(PolymerToggle, assign({}, this.props, {onChange: this._onChange}))
     }
   })
 }
@@ -56,7 +57,7 @@ function createTextClass (PolymerText, displayName) {
         props.value = null
         props['bind-value'] = this.props.value
       }
-      return <PolymerText {...this.props} {...props} />
+      return React.createElement(PolymerText, assign({}, this.props, props))
     }
   })
 }
@@ -81,7 +82,10 @@ exports.PaperSlider = React.createClass({
     })
   },
   render () {
-    return <paper-slider {...this.props} onChange={this._onChange} onImmediateValueChange={this._onChange} />
+    return React.createElement('paper-slider', assign({}, this.props, {
+      onChange: this._onChange,
+      onImmediateValueChange: this._onChange
+    }))
   }
 })
 
@@ -101,7 +105,7 @@ function createSelectorClass (PolymerSelector, displayName) {
       })
     },
     render () {
-      return <PolymerSelector {...this.props} onChange={null} onIronSelect={this._onChange} />
+      return React.createElement(PolymerSelector, assign({}, this.props, {onChange: null, onIronSelect: this._onChange}))
     }
   })
 }
