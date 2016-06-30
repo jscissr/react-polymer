@@ -1,6 +1,6 @@
 {
   "name": "react-polymer",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Use Polymer elements in React",
   "main": "index.js",
   "scripts": {
