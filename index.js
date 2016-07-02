@@ -180,11 +180,13 @@ DOMPropertyOperations.setValueForAttribute = function (node, name, value) {
   addPolymerScope(node)
 }
 
-var oldDeleteValueForProperty = DOMPropertyOperations.deleteValueForProperty
+var oldDeleteValueForAttribute = DOMPropertyOperations.deleteValueForAttribute
 
-DOMPropertyOperations.deleteValueForProperty = function (node, name) {
-  oldDeleteValueForProperty(node, name)
-  if (name === 'className') addPolymerScope(node)
+DOMPropertyOperations.deleteValueForAttribute = function (node, name) {
+  if (name !== 'className') return oldDeleteValueForAttribute(node, name)
+
+  node.className = ''
+  addPolymerScope(node)
 }
 
 function addPolymerScope (node) {
