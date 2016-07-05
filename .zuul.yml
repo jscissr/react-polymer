@@ -8,9 +8,9 @@ browserify:
 html: test/build.html
 browsers:
   - name: chrome
-    version: -2..beta
+    version: [latest, beta]
   - name: firefox
-    version: latest
+    version: 46 # 47 seems to break zuul
   - name: safari
     version: latest
   - name: ie
