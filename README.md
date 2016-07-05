@@ -24,7 +24,7 @@ Now you need react-polymer:
 import reactPolymer from 'react-polymer' // Must be imported before React
 import React from 'react'
 
-reactPolymer.registerAttribute('drawer')
+reactPolymer.registerAttribute('drawer') // Note: this is only needed for custom attributes on standard elements like div
 reactPolymer.registerAttribute('main')
 reactPolymer.registerEvent('response', 'onResponse')
 
