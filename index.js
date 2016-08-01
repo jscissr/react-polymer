@@ -16,7 +16,7 @@ var keyOf = require('fbjs/lib/keyOf')
 var Polymer = global.Polymer
 
 function isPolymerElement (element) {
-  return element.nodeName && element.nodeName.indexOf('-') !== -1
+  return element && element.nodeName && element.nodeName.indexOf('-') !== -1
 }
 
 var customTopLevelTypes = {}
