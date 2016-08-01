@@ -10,7 +10,7 @@ browsers:
   - name: chrome
     version: [latest, beta]
   - name: firefox
-    version: 46 # 47 seems to break zuul
+    version: latest
   - name: safari
     version: latest
   - name: ie
