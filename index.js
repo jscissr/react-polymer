@@ -172,7 +172,7 @@ if (Polymer && Polymer.Settings) {
   useShadyDOM = !Polymer.Settings.useNativeShadow
 } else if (Polymer && Polymer.dom) {
   console.warn('react-polymer: Polymer is not loaded; using Polymer global settings for shady DOM')
-  useShadyDOM = (Polymer.dom === "shady")
+  useShadyDOM = (Polymer.dom === 'shady')
 } else {
   console.warn('react-polymer: Polymer is not loaded; assuming shady DOM not used')
   useShadyDOM = false
