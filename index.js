@@ -166,10 +166,18 @@ if (EventPluginUtils.injection.Mount) {
 // must be called before require('react') is called the first time
 DefaultEventPluginOrder.push(keyOf({ReactPolymerPlugin: null}))
 
-if (!Polymer) console.warn('react-polymer: Polymer is not loaded')
+var useShadyDOM
+if (Polymer && Polymer.Settings) {
+  // See https://github.com/Polymer/polymer/blob/55b91b3db7c3085b31a1d388ac0d9131bedb9f0b/src/standard/x-styling.html#L191
+  useShadyDOM = !Polymer.Settings.useNativeShadow
+} else if (Polymer && Polymer.dom) {
+  console.warn('react-polymer: Polymer is not loaded; using Polymer global settings for shady DOM')
+  useShadyDOM = (Polymer.dom === "shady")
+} else {
+  console.warn('react-polymer: Polymer is not loaded; assuming shady DOM not used')
+  useShadyDOM = false
+}
 
-// See https://github.com/Polymer/polymer/blob/55b91b3db7c3085b31a1d388ac0d9131bedb9f0b/src/standard/x-styling.html#L191
-var useShadyDOM = Polymer && !Polymer.Settings.useNativeShadow
 var oldSetValueForAttribute = DOMPropertyOperations.setValueForAttribute
 
 DOMPropertyOperations.setValueForAttribute = function (node, name, value) {
