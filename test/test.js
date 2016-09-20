@@ -138,7 +138,7 @@ test('react-polymer adds classes to Polymer elements', t => {
   t.plan(1)
   t.timeoutAfter(2000)
 
-  renderContainer(<paper-checkbox className='blue' ref={immediateRef(ref => t.equal(ref.className, 'blue x-scope paper-checkbox-0'))} />)
+  renderContainer(<paper-checkbox className='blue' ref={immediateRef(ref => t.equal(ref.className, 'blue x-scope paper-checkbox-1'))} />)
 })
 
 test('react-polymer keeps Polymer classes when React classes change', t => {
@@ -152,11 +152,11 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
     },
     componentDidMount () {
       setImmediate(() => {
-        t.equal(checkBox.className, 'red x-scope paper-checkbox-0')
+        t.equal(checkBox.className, 'red x-scope paper-checkbox-1')
 
         this.setState({lamp: 'green'})
         setImmediate(() => {
-          t.equal(checkBox.className, 'green x-scope paper-checkbox-0')
+          t.equal(checkBox.className, 'green x-scope paper-checkbox-1')
         })
       })
     },
@@ -180,7 +180,7 @@ test('react-polymer keeps Polymer classes when React classes are removed', t => 
       setImmediate(() => {
         this.setState({hasClass: false})
         setImmediate(() => {
-          t.equal(checkBox.className, 'x-scope paper-checkbox-0')
+          t.equal(checkBox.className, 'x-scope paper-checkbox-1')
         })
       })
     },
