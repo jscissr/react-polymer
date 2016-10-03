@@ -7,7 +7,6 @@ var DOMLazyTree = require('react/lib/DOMLazyTree')
 var ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree')
 var EventConstants = require('react/lib/EventConstants')
 var EventPluginRegistry = require('react/lib/EventPluginRegistry')
-var EventPluginUtils = require('react/lib/EventPluginUtils')
 var EventPropagators = require('react/lib/EventPropagators')
 var ReactBrowserEventEmitter = require('react/lib/ReactBrowserEventEmitter')
 var ReactInjection = require('react/lib/ReactInjection')
@@ -151,7 +150,11 @@ function injectAll () {
 
   require('react') // make sure it's loaded
   require('react/lib/ReactDOM')
-  ReactInjection.EventPluginHub.injectEventPluginsByName({ReactPolymerPlugin: ReactPolymerPlugin})
+  try {
+    ReactInjection.EventPluginHub.injectEventPluginsByName({ReactPolymerPlugin: ReactPolymerPlugin})
+  } catch (err) {
+    throw new Error('react-polymer must be required before react')
+  }
 
   ReactInjection.DOMProperty.injectDOMPropertyConfig({
     isCustomAttribute: function (name) {
@@ -160,9 +163,6 @@ function injectAll () {
   })
 }
 
-if (EventPluginUtils.injection.Mount) {
-  throw new Error('react-polymer must be required before react')
-}
 // must be called before require('react') is called the first time
 DefaultEventPluginOrder.push(keyOf({ReactPolymerPlugin: null}))
 
