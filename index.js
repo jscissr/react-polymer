@@ -62,7 +62,7 @@ function registerEvent (name, bubbled, captured) {
     captured = captured != null ? keyOf(captured) : bubbled + 'Captured'
   }
 
-  if (registeredEvents.some(reg => reg.name === name || reg.bubbled === bubbled)) {
+  if (registeredEvents.some(function(reg) { return (reg.name === name || reg.bubbled === bubbled) })) {
     return
   }
   registeredEvents.push({name: name, bubbled: bubbled})
