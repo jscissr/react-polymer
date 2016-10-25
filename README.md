@@ -63,9 +63,13 @@ import {
 ```
 
 Another problem that is solved automatically by react-polymer is that
-`className` doesn't work on Polymer elements.
+`className` doesn't work on Polymer elements when using Shady DOM.
 
 See [more examples](https://github.com/jscissr/react-polymer/blob/master/demo/index-source.js).
+
+## ES6
+
+This module uses some ES6 features, so you should run it through a transpiler like [babel](https://babeljs.io/). If you use [browserify](http://browserify.org/), you don't need to do anything. If you use [webpack](https://webpack.github.io/), you have to [enable transpiling](https://webpack.github.io/docs/usage.html#transpiling-es2015-using-babel-loader), but replace the default `exclude` config with `exclude: s => /node_modules/.test(s) && !/react-polymer/.test(s)`. (If you know how to make webpack do this automatically like it works with browserify, please tell me!)
 
 ## Testing
 
