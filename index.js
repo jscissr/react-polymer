@@ -1,16 +1,16 @@
 'use strict'
 
-var DefaultEventPluginOrder = require('react/lib/DefaultEventPluginOrder')
-var DOMPropertyOperations = require('react/lib/DOMPropertyOperations')
-var DOMChildrenOperations = require('react/lib/DOMChildrenOperations')
-var DOMLazyTree = require('react/lib/DOMLazyTree')
-var ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree')
-var EventConstants = require('react/lib/EventConstants')
-var EventPluginRegistry = require('react/lib/EventPluginRegistry')
-var EventPropagators = require('react/lib/EventPropagators')
-var ReactBrowserEventEmitter = require('react/lib/ReactBrowserEventEmitter')
-var ReactInjection = require('react/lib/ReactInjection')
-var SyntheticEvent = require('react/lib/SyntheticEvent')
+var DefaultEventPluginOrder = require('react-dom/lib/DefaultEventPluginOrder')
+var DOMPropertyOperations = require('react-dom/lib/DOMPropertyOperations')
+var DOMChildrenOperations = require('react-dom/lib/DOMChildrenOperations')
+var DOMLazyTree = require('react-dom/lib/DOMLazyTree')
+var ReactDOMComponentTree = require('react-dom/lib/ReactDOMComponentTree')
+var EventConstants = require('react-dom/lib/EventConstants')
+var EventPluginRegistry = require('react-dom/lib/EventPluginRegistry')
+var EventPropagators = require('react-dom/lib/EventPropagators')
+var ReactBrowserEventEmitter = require('react-dom/lib/ReactBrowserEventEmitter')
+var ReactInjection = require('react-dom/lib/ReactInjection')
+var SyntheticEvent = require('react-dom/lib/SyntheticEvent')
 var keyOf = require('fbjs/lib/keyOf')
 var Polymer = global.Polymer
 
@@ -23,14 +23,14 @@ var ReactPolymerPlugin = {
   eventTypes: {},
 
   extractEvents: function (
-      topLevelType,
-      targetInst,
-      nativeEvent,
-      nativeEventTarget) {
+    topLevelType,
+    targetInst,
+    nativeEvent,
+    nativeEventTarget) {
     var targetNode = targetInst && ReactDOMComponentTree.getNodeFromInstance(targetInst)
 
     if (!customTopLevelTypes.hasOwnProperty(topLevelType) ||
-        !isPolymerElement(targetNode)) {
+      !isPolymerElement(targetNode)) {
       return null
     }
     var event = SyntheticEvent.getPooled(
@@ -85,10 +85,10 @@ function registerEvent (name, bubbled, captured) {
     var previous = existing.extractEvents
 
     existing.extractEvents = function (
-        localTopLevelType,
-        targetInst,
-        nativeEvent,
-        nativeEventTarget) {
+      localTopLevelType,
+      targetInst,
+      nativeEvent,
+      nativeEventTarget) {
       var targetNode = targetInst && ReactDOMComponentTree.getNodeFromInstance(targetInst)
 
       if (nativeEvent.type !== name || !isPolymerElement(targetNode)) {
@@ -116,14 +116,14 @@ function registerEvent (name, bubbled, captured) {
   )
 
   ReactPolymerPlugin.eventTypes[bubbled] =
-      EventPluginRegistry.eventNameDispatchConfigs[bubbled] =
+    EventPluginRegistry.eventNameDispatchConfigs[bubbled] =
       customTopLevelTypes[topLevelType] = dispatchConfig
 
   EventPluginRegistry.registrationNameModules[bubbled] =
-      EventPluginRegistry.registrationNameModules[captured] = ReactPolymerPlugin
+    EventPluginRegistry.registrationNameModules[captured] = ReactPolymerPlugin
 
   EventPluginRegistry.registrationNameDependencies[bubbled] =
-      EventPluginRegistry.registrationNameDependencies[captured] =
+    EventPluginRegistry.registrationNameDependencies[captured] =
       dispatchConfig.dependencies
 }
 
@@ -148,8 +148,8 @@ function injectAll () {
   }
   isInjected = true
 
-  require('react') // make sure it's loaded
-  require('react/lib/ReactDOM')
+  require('react-dom') // make sure it's loaded
+  require('react-dom/lib/ReactDOM')
   try {
     ReactInjection.EventPluginHub.injectEventPluginsByName({ReactPolymerPlugin: ReactPolymerPlugin})
   } catch (err) {
