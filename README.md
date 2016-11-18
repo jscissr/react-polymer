@@ -87,7 +87,7 @@ Polymer elements can have properties with `notify` attribute, which trigger
 `{property}-changed` events. However these events don't bubble, so you have to
 manually call `addEventListener` yourself.
 
-This module does a lot of monkey patching, so it only works with React 15.
+This module does a lot of monkey patching on internal APIs of react-dom, so it only works with React 15. It is recommended to pin React to a fixed version, and always test new versions before updating. There is no guarantee that it will still work, even after patch-level updates of React.
 
 ## Notes
 
