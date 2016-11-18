@@ -15,8 +15,8 @@
 
 'use strict'
 
-var createMicrosoftUnsafeLocalFunction = require('react/lib/createMicrosoftUnsafeLocalFunction')
-var setTextContent = require('react/lib/setTextContent')
+var createMicrosoftUnsafeLocalFunction = require('react-dom/lib/createMicrosoftUnsafeLocalFunction')
+var setTextContent = require('react-dom/lib/setTextContent')
 
 /* global Polymer */
 

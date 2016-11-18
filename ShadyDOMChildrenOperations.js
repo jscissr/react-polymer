@@ -15,13 +15,13 @@
 
 'use strict'
 
-var DOMLazyTree = require('react/lib/DOMLazyTree')
+var DOMLazyTree = require('react-dom/lib/DOMLazyTree')
 // var Danger = require('react/lib/Danger')
-var ReactMultiChildUpdateTypes = require('react/lib/ReactMultiChildUpdateTypes')
+var ReactMultiChildUpdateTypes = require('react-dom/lib/ReactMultiChildUpdateTypes')
 
-var createMicrosoftUnsafeLocalFunction = require('react/lib/createMicrosoftUnsafeLocalFunction')
-var setInnerHTML = require('react/lib/setInnerHTML')
-var setTextContent = require('react/lib/setTextContent')
+var createMicrosoftUnsafeLocalFunction = require('react-dom/lib/createMicrosoftUnsafeLocalFunction')
+var setInnerHTML = require('react-dom/lib/setInnerHTML')
+var setTextContent = require('react-dom/lib/setTextContent')
 
 /* global Polymer */
 
