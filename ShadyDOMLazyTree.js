@@ -6,17 +6,22 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule DOMLazyTree
  */
 
-// This file is based on DOMLazyTree from React.
+// This file is based on DOMLazyTree from react-dom.
 // It is modified to use the Polymer.dom API.
 // This is necessary if Polymers shady DOM is used.
 
 'use strict'
 
-var createMicrosoftUnsafeLocalFunction = require('react/lib/createMicrosoftUnsafeLocalFunction')
-var setTextContent = require('react/lib/setTextContent')
+var DOMNamespaces = require('react-dom/lib/DOMNamespaces')
+var setInnerHTML = require('react-dom/lib/setInnerHTML')
+
+var createMicrosoftUnsafeLocalFunction = require('react-dom/lib/createMicrosoftUnsafeLocalFunction')
+var setTextContent = require('react-dom/lib/setTextContent')
+
+var ELEMENT_NODE_TYPE = 1
+var DOCUMENT_FRAGMENT_NODE_TYPE = 11
 
 /* global Polymer */
 
@@ -49,7 +54,7 @@ function insertTreeChildren (tree) {
       insertTreeBefore(node, children[i], null)
     }
   } else if (tree.html != null) {
-    lightDOM(node).innerHTML = tree.html
+    setInnerHTML(lightDOM(node), tree.html)
   } else if (tree.text != null) {
     setTextContent(lightDOM(node), tree.text)
   }
@@ -60,8 +65,10 @@ var insertTreeBefore = createMicrosoftUnsafeLocalFunction(function (parentNode, 
   // DocumentFragments aren't actually part of the DOM after insertion so
   // appending children won't update the DOM. We need to ensure the fragment
   // is properly populated first, breaking out of our lazy approach for just
-  // this level.
-  if (tree.node.nodeType === 11) {
+  // this level. Also, some <object> plugins (like Flash Player) will read
+  // <param> nodes immediately upon insertion into the DOM, so <object>
+  // must also be populated prior to insertion into the DOM.
+  if (tree.node.nodeType === DOCUMENT_FRAGMENT_NODE_TYPE || tree.node.nodeType === ELEMENT_NODE_TYPE && tree.node.nodeName.toLowerCase() === 'object' && (tree.node.namespaceURI == null || tree.node.namespaceURI === DOMNamespaces.html)) {
     insertTreeChildren(tree)
     parentNode.insertBefore(tree.node, referenceNode)
   } else {
@@ -87,7 +94,7 @@ function queueHTML (tree, html) {
   if (enableLazy) {
     tree.html = html
   } else {
-    lightDOM(tree.node).innerHTML = html
+    setInnerHTML(lightDOM(tree.node), html)
   }
 }
 
@@ -99,7 +106,19 @@ function queueText (tree, text) {
   }
 }
 
-function DOMLazyTree () {}
+function toString () {
+  return this.node.nodeName
+}
+
+function DOMLazyTree (node) {
+  return {
+    node: node,
+    children: [],
+    html: null,
+    text: null,
+    toString: toString
+  }
+}
 
 DOMLazyTree.insertTreeBefore = insertTreeBefore
 DOMLazyTree.replaceChildWithTree = replaceChildWithTree

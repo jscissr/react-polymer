@@ -1,6 +1,6 @@
 var reactPolymer = require('./')
 var React = require('react')
-var ReactUpdates = require('react/lib/ReactUpdates')
+var ReactUpdates = require('react-dom/lib/ReactUpdates')
 var assign = require('object-assign')
 
 reactPolymer.registerEvent('change', {onChange: true}, {onChangeCapture: true})

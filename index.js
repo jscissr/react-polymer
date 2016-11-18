@@ -1,16 +1,16 @@
 'use strict'
 
-var DefaultEventPluginOrder = require('react/lib/DefaultEventPluginOrder')
-var DOMPropertyOperations = require('react/lib/DOMPropertyOperations')
-var DOMChildrenOperations = require('react/lib/DOMChildrenOperations')
-var DOMLazyTree = require('react/lib/DOMLazyTree')
-var ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree')
-var EventConstants = require('react/lib/EventConstants')
-var EventPluginRegistry = require('react/lib/EventPluginRegistry')
-var EventPropagators = require('react/lib/EventPropagators')
-var ReactBrowserEventEmitter = require('react/lib/ReactBrowserEventEmitter')
-var ReactInjection = require('react/lib/ReactInjection')
-var SyntheticEvent = require('react/lib/SyntheticEvent')
+var DefaultEventPluginOrder = require('react-dom/lib/DefaultEventPluginOrder')
+var DOMPropertyOperations = require('react-dom/lib/DOMPropertyOperations')
+var DOMChildrenOperations = require('react-dom/lib/DOMChildrenOperations')
+var DOMLazyTree = require('react-dom/lib/DOMLazyTree')
+var ReactDOMComponentTree = require('react-dom/lib/ReactDOMComponentTree')
+var EventConstants = require('react-dom/lib/EventConstants')
+var EventPluginRegistry = require('react-dom/lib/EventPluginRegistry')
+var EventPropagators = require('react-dom/lib/EventPropagators')
+var ReactBrowserEventEmitter = require('react-dom/lib/ReactBrowserEventEmitter')
+var ReactInjection = require('react-dom/lib/ReactInjection')
+var SyntheticEvent = require('react-dom/lib/SyntheticEvent')
 var keyOf = require('fbjs/lib/keyOf')
 var Polymer = global.Polymer
 
@@ -149,7 +149,7 @@ function injectAll () {
   isInjected = true
 
   require('react') // make sure it's loaded
-  require('react/lib/ReactDOM')
+  require('react-dom')
   try {
     ReactInjection.EventPluginHub.injectEventPluginsByName({ReactPolymerPlugin: ReactPolymerPlugin})
   } catch (err) {

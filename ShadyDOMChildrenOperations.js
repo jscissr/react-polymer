@@ -6,22 +6,22 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule DOMChildrenOperations
  */
 
-// This file is based on DOMChildrenOperations from React.
+// This file is based on DOMChildrenOperations from react-dom.
 // It is modified to use the Polymer.dom API.
 // This is necessary if Polymers shady DOM is used.
 
 'use strict'
 
-var DOMLazyTree = require('react/lib/DOMLazyTree')
-// var Danger = require('react/lib/Danger')
-var ReactMultiChildUpdateTypes = require('react/lib/ReactMultiChildUpdateTypes')
+var DOMLazyTree = require('react-dom/lib/DOMLazyTree')
+// var Danger = require('react-dom/lib/Danger')
+var ReactDOMComponentTree = require('react-dom/lib/ReactDOMComponentTree')
+var ReactInstrumentation = require('react-dom/lib/ReactInstrumentation')
 
-var createMicrosoftUnsafeLocalFunction = require('react/lib/createMicrosoftUnsafeLocalFunction')
-var setInnerHTML = require('react/lib/setInnerHTML')
-var setTextContent = require('react/lib/setTextContent')
+var createMicrosoftUnsafeLocalFunction = require('react-dom/lib/createMicrosoftUnsafeLocalFunction')
+var setInnerHTML = require('react-dom/lib/setInnerHTML')
+var setTextContent = require('react-dom/lib/setTextContent')
 
 /* global Polymer */
 
@@ -32,7 +32,7 @@ function lightDOM (element) {
 
 function getNodeAfter (parentNode, node) {
   // Special case for text components, which return [open, close] comments
-  // from getNativeNode.
+  // from getHostNode.
   if (Array.isArray(node)) {
     node = node[1]
   }
@@ -119,6 +119,14 @@ function replaceDelimitedText (openingComment, closingComment, stringText) {
       removeDelimitedText(parentNode, openingComment, closingComment)
     }
   }
+
+  if (process.env.NODE_ENV !== 'production') {
+    ReactInstrumentation.debugTool.onHostOperation({
+      instanceID: ReactDOMComponentTree.getInstanceFromNode(openingComment)._debugID,
+      type: 'replace text',
+      payload: stringText
+    })
+  }
 }
 
 /**
@@ -126,7 +134,7 @@ function replaceDelimitedText (openingComment, closingComment, stringText) {
  */
 var DOMChildrenOperations = {
 
-  // dangerouslyReplaceNodeWithMarkup: Danger.dangerouslyReplaceNodeWithMarkup,
+  // dangerouslyReplaceNodeWithMarkup: dangerouslyReplaceNodeWithMarkup,
 
   replaceDelimitedText: replaceDelimitedText,
 
@@ -138,24 +146,63 @@ var DOMChildrenOperations = {
    * @internal
    */
   processUpdates: function (parentNode, updates) {
+    if (process.env.NODE_ENV !== 'production') {
+      var parentNodeDebugID = ReactDOMComponentTree.getInstanceFromNode(parentNode)._debugID
+    }
+
     parentNode = lightDOM(parentNode)
     for (var k = 0; k < updates.length; k++) {
       var update = updates[k]
       switch (update.type) {
-        case ReactMultiChildUpdateTypes.INSERT_MARKUP:
+        case 'INSERT_MARKUP':
           insertLazyTreeChildAt(parentNode, update.content, getNodeAfter(parentNode, update.afterNode))
+          if (process.env.NODE_ENV !== 'production') {
+            ReactInstrumentation.debugTool.onHostOperation({
+              instanceID: parentNodeDebugID,
+              type: 'insert child',
+              payload: { toIndex: update.toIndex, content: update.content.toString() }
+            })
+          }
           break
-        case ReactMultiChildUpdateTypes.MOVE_EXISTING:
+        case 'MOVE_EXISTING':
           moveChild(parentNode, update.fromNode, getNodeAfter(parentNode, update.afterNode))
+          if (process.env.NODE_ENV !== 'production') {
+            ReactInstrumentation.debugTool.onHostOperation({
+              instanceID: parentNodeDebugID,
+              type: 'move child',
+              payload: { fromIndex: update.fromIndex, toIndex: update.toIndex }
+            })
+          }
           break
-        case ReactMultiChildUpdateTypes.SET_MARKUP:
+        case 'SET_MARKUP':
           setInnerHTML(parentNode, update.content)
+          if (process.env.NODE_ENV !== 'production') {
+            ReactInstrumentation.debugTool.onHostOperation({
+              instanceID: parentNodeDebugID,
+              type: 'replace children',
+              payload: update.content.toString()
+            })
+          }
           break
-        case ReactMultiChildUpdateTypes.TEXT_CONTENT:
+        case 'TEXT_CONTENT':
           setTextContent(parentNode, update.content)
+          if (process.env.NODE_ENV !== 'production') {
+            ReactInstrumentation.debugTool.onHostOperation({
+              instanceID: parentNodeDebugID,
+              type: 'replace text',
+              payload: update.content.toString()
+            })
+          }
           break
-        case ReactMultiChildUpdateTypes.REMOVE_NODE:
+        case 'REMOVE_NODE':
           removeChild(parentNode, update.fromNode)
+          if (process.env.NODE_ENV !== 'production') {
+            ReactInstrumentation.debugTool.onHostOperation({
+              instanceID: parentNodeDebugID,
+              type: 'remove child',
+              payload: { fromIndex: update.fromIndex }
+            })
+          }
           break
       }
     }
