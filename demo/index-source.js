@@ -1,4 +1,4 @@
-import '../'
+import reactPolymer from '../'
 
 import React from 'react'
 import {render} from 'react-dom'
@@ -17,6 +17,8 @@ import {
   IronSelector
 } from '../input'
 
+reactPolymer.registerEvent('color-picker-selected', 'onColorPickerSelected')
+
 var App = React.createClass({
   getInitialState () {
     return {
@@ -25,7 +27,8 @@ var App = React.createClass({
       value: 30,
       checked: false,
       editable: true,
-      selected: 'small'
+      selected: 'small',
+      color: ''
     }
   },
 
@@ -63,6 +66,10 @@ var App = React.createClass({
 
   editableChange (event) {
     this.setState({editable: event.target.checked})
+  },
+
+  colorChange (event) {
+    this.setState({color: event.target.color})
   },
 
   render () {
@@ -176,6 +183,8 @@ var App = React.createClass({
         <p><label><input type='checkbox' checked={this.state.editable} onChange={this.editableChange} /> fields editable</label></p>
 
         <p>Changing className (should keep styling): <PaperToggleButton className={'c' + Math.floor(Math.random() * 9999) + ' other-class'} /></p>
+
+        <p>Color picker: <paper-swatch-picker onColorPickerSelected={this.colorChange} />{this.state.color && ` selected: ${this.state.color}`}</p>
       </div>
     )
   }

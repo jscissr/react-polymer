@@ -26,14 +26,14 @@ import React from 'react'
 
 reactPolymer.registerAttribute('drawer') // Note: this is only needed for custom attributes on standard elements like div
 reactPolymer.registerAttribute('main')
-reactPolymer.registerEvent('response', 'onResponse')
+reactPolymer.registerEvent('color-picker-selected', 'onColorPickerSelected')
 
 
 <paper-drawer-panel>
   <div drawer> Drawer panel... </div>
   <div main> Main panel... </div>
 </paper-drawer-panel>
-<iron-ajax url="http://example.com/" onResponse={this.handleResponse} />
+<paper-swatch-picker onColorPickerSelected={this.colorChange} />
 ```
 
 Also, all the form elements don't work like the native ones.
