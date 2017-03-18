@@ -41,7 +41,7 @@ function lightDOM (element) {
  *
  * See https://github.com/spicyj/innerhtml-vs-createelement-vs-clonenode.
  */
-var enableLazy = typeof document !== 'undefined' && typeof document.documentMode === 'number' || typeof navigator !== 'undefined' && typeof navigator.userAgent === 'string' && /\bEdge\/\d/.test(navigator.userAgent)
+var enableLazy = (typeof document !== 'undefined' && typeof document.documentMode === 'number') || (typeof navigator !== 'undefined' && typeof navigator.userAgent === 'string' && /\bEdge\/\d/.test(navigator.userAgent))
 
 function insertTreeChildren (tree) {
   if (!enableLazy) {
@@ -68,7 +68,7 @@ var insertTreeBefore = createMicrosoftUnsafeLocalFunction(function (parentNode, 
   // this level. Also, some <object> plugins (like Flash Player) will read
   // <param> nodes immediately upon insertion into the DOM, so <object>
   // must also be populated prior to insertion into the DOM.
-  if (tree.node.nodeType === DOCUMENT_FRAGMENT_NODE_TYPE || tree.node.nodeType === ELEMENT_NODE_TYPE && tree.node.nodeName.toLowerCase() === 'object' && (tree.node.namespaceURI == null || tree.node.namespaceURI === DOMNamespaces.html)) {
+  if (tree.node.nodeType === DOCUMENT_FRAGMENT_NODE_TYPE || (tree.node.nodeType === ELEMENT_NODE_TYPE && tree.node.nodeName.toLowerCase() === 'object' && (tree.node.namespaceURI == null || tree.node.namespaceURI === DOMNamespaces.html))) {
     insertTreeChildren(tree)
     parentNode.insertBefore(tree.node, referenceNode)
   } else {
