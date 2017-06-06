@@ -58,6 +58,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
     "fbjs": "^0.8.0",
-    "object-assign": "^4.1.0"
+    "object-assign": "^4.1.0",
+    "prop-types": "^15.5.10"
   }
 }

@@ -1,6 +1,7 @@
 var reactPolymer = require('./')
 var React = require('react')
 var ReactUpdates = require('react-dom/lib/ReactUpdates')
+var PropTypes = require('prop-types')
 var assign = require('object-assign')
 
 reactPolymer.registerEvent('change', {onChange: true}, {onChangeCapture: true})
@@ -12,8 +13,8 @@ function createToggleClass (PolymerToggle, displayName) {
   return React.createClass({
     displayName,
     propTypes: {
-      onChange: React.PropTypes.func,
-      checked: React.PropTypes.bool
+      onChange: PropTypes.func,
+      checked: PropTypes.bool
     },
     _onChange (event) {
       if (this.props.onChange) this.props.onChange.call(undefined, event)
@@ -32,8 +33,8 @@ function createTextClass (PolymerText, displayName) {
   return React.createClass({
     displayName,
     propTypes: {
-      onChange: React.PropTypes.func,
-      value: React.PropTypes.string
+      onChange: PropTypes.func,
+      value: PropTypes.string
     },
     _onChange (event) {
       if (this.props.onChange) this.props.onChange.call(undefined, event)
@@ -69,8 +70,8 @@ exports.PaperTextarea = createTextClass('paper-textarea', 'PaperTextarea')
 exports.PaperSlider = React.createClass({
   displayName: 'PaperSlider',
   propTypes: {
-    onChange: React.PropTypes.func,
-    value: React.PropTypes.number
+    onChange: PropTypes.func,
+    value: PropTypes.number
   },
   _onChange (event) {
     var target = event.target
@@ -93,8 +94,8 @@ function createSelectorClass (PolymerSelector, displayName) {
   return React.createClass({
     displayName,
     propTypes: {
-      onChange: React.PropTypes.func,
-      selected: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+      onChange: PropTypes.func,
+      selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     },
     _onChange (event) {
       if (this.props.onChange) this.props.onChange.call(undefined, event)
