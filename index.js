@@ -9,7 +9,6 @@ var EventPropagators = require('react-dom/lib/EventPropagators')
 var ReactBrowserEventEmitter = require('react-dom/lib/ReactBrowserEventEmitter')
 var ReactInjection = require('react-dom/lib/ReactInjection')
 var SyntheticEvent = require('react-dom/lib/SyntheticEvent')
-var keyOf = require('fbjs/lib/keyOf')
 var Polymer = global.Polymer
 
 function isPolymerElement (element) {
@@ -48,17 +47,12 @@ var monkeyPatchedExisting = []
 /**
  * Register an event to listen for on Polymer elements.
  * @param {string} name the event name (e.g. 'change')
- * @param {object|string} bubbled listener attribute name as an object key (e.g. {onChange: true})
- * @param {object|string} captured capturing listener attribute name as an object key (e.g. {onChangeCapture: true})
+ * @param {string} bubbled listener attribute name (e.g. 'onChange')
+ * @param {string} [captured] capturing listener attribute name (e.g. 'onChangeCapture')
  */
-function registerEvent (name, bubbled, captured) {
+function registerEvent (name, bubbled, captured = bubbled + 'Capture') {
+  if (typeof bubbled !== 'string') throw new TypeError()
   injectAll()
-  if (typeof bubbled !== 'string') {
-    bubbled = keyOf(bubbled)
-  }
-  if (typeof captured !== 'string') {
-    captured = captured != null ? keyOf(captured) : bubbled + 'Captured'
-  }
 
   if (registeredEvents.some(reg => reg.name === name || reg.bubbled === bubbled)) {
     return
@@ -162,7 +156,7 @@ function injectAll () {
 }
 
 // must be called before require('react') is called the first time
-DefaultEventPluginOrder.push(keyOf({ReactPolymerPlugin: null}))
+DefaultEventPluginOrder.push('ReactPolymerPlugin')
 
 var useShadyDOM
 if (Polymer && Polymer.Settings) {

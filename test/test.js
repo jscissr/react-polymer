@@ -17,8 +17,8 @@ import {
   IronSelector
 } from '../input'
 
-reactPolymer.registerEvent('iron-change', {onIronChange: true}, {onIronChangeCapture: true})
-reactPolymer.registerEvent('change', {onChange: true})
+reactPolymer.registerEvent('iron-change', 'onIronChange')
+reactPolymer.registerEvent('change', 'onChange')
 reactPolymer.registerAttribute('drawer')
 
 function expectedClass (className, xScope) {

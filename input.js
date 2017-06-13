@@ -4,9 +4,9 @@ var ReactUpdates = require('react-dom/lib/ReactUpdates')
 var PropTypes = require('prop-types')
 var assign = require('object-assign')
 
-reactPolymer.registerEvent('change', {onChange: true}, {onChangeCapture: true})
-reactPolymer.registerEvent('immediate-value-change', {onImmediateValueChange: true}, {onImmediateValueChangeCapture: true})
-reactPolymer.registerEvent('iron-select', {onIronSelect: true}, {onIronSelectCapture: true})
+reactPolymer.registerEvent('change', 'onChange')
+reactPolymer.registerEvent('immediate-value-change', 'onImmediateValueChange')
+reactPolymer.registerEvent('iron-select', 'onIronSelect')
 
 function createToggleClass (PolymerToggle, displayName) {
   return React.createClass({
