@@ -10,7 +10,6 @@ import {
   PaperInput,
   PaperTextarea,
   PaperSlider,
-  PaperMenu,
   PaperListbox,
   PaperRadioGroup,
   PaperTabs,
@@ -89,7 +88,11 @@ var App = React.createClass({
               <td>Text</td>
               <td><input type='text' value={this.state.text} onChange={this.textChange} /></td>
               <td><PaperInput label='Label' value={this.state.text} onChange={this.textChange} /></td>
-              <td><input is='iron-input' value={this.state.text} onChange={this.textChange} /></td>
+              <td>
+                <iron-input>
+                  <input value={this.state.text} onChange={this.textChange} />
+                </iron-input>
+              </td>
             </tr>
             <tr>
               <td>Textarea</td>
@@ -141,11 +144,11 @@ var App = React.createClass({
               </td>
               <td>
                 <paper-dropdown-menu label='Size'>
-                  <PaperMenu className='dropdown-content' attr-for-selected='value' selected={this.state.selected} onChange={this.selectedChange}>
+                  <PaperListbox slot='dropdown-content' attr-for-selected='value' selected={this.state.selected} onChange={this.selectedChange}>
                     <paper-item value='small'>Small</paper-item>
                     <paper-item value='medium'>Medium</paper-item>
                     <paper-item value='large'>Large</paper-item>
-                  </PaperMenu>
+                  </PaperListbox>
                 </paper-dropdown-menu>
               </td>
               <td />
@@ -190,4 +193,7 @@ var App = React.createClass({
   }
 })
 
-render(<App />, document.getElementById('react-main'))
+setTimeout(
+  () => render(<App />, document.getElementById('react-main')),
+  0
+)

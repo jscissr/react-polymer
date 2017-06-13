@@ -2,8 +2,6 @@
 
 var DefaultEventPluginOrder = require('react-dom/lib/DefaultEventPluginOrder')
 var DOMPropertyOperations = require('react-dom/lib/DOMPropertyOperations')
-var DOMChildrenOperations = require('react-dom/lib/DOMChildrenOperations')
-var DOMLazyTree = require('react-dom/lib/DOMLazyTree')
 var ReactDOMComponentTree = require('react-dom/lib/ReactDOMComponentTree')
 var EventConstants = require('react-dom/lib/EventConstants')
 var EventPluginRegistry = require('react-dom/lib/EventPluginRegistry')
@@ -169,7 +167,7 @@ DefaultEventPluginOrder.push(keyOf({ReactPolymerPlugin: null}))
 var useShadyDOM
 if (Polymer && Polymer.Settings) {
   // See https://github.com/Polymer/polymer/blob/55b91b3db7c3085b31a1d388ac0d9131bedb9f0b/src/standard/x-styling.html#L191
-  useShadyDOM = !Polymer.Settings.useNativeShadow
+  useShadyDOM = !(Polymer.Settings.useNativeShadow || Polymer.Settings.useShadow)
 } else if (Polymer && Polymer.dom) {
   console.warn('react-polymer: Polymer is not loaded; using Polymer global settings for shady DOM')
   useShadyDOM = (Polymer.dom === 'shady')
@@ -209,19 +207,6 @@ DOMPropertyOperations.createMarkupForCustomAttribute = function (name, value) {
   if (name === 'className') name = 'class'
   if (value === false) value = null
   return oldCreateMarkupForCustomAttribute(name, value)
-}
-
-if (useShadyDOM) {
-  var ShadyDOMChildrenOperations = require('./ShadyDOMChildrenOperations')
-  DOMChildrenOperations.replaceDelimitedText = ShadyDOMChildrenOperations.replaceDelimitedText
-  DOMChildrenOperations.processUpdates = ShadyDOMChildrenOperations.processUpdates
-
-  var ShadyDOMLazyTree = require('./ShadyDOMLazyTree')
-  DOMLazyTree.insertTreeBefore = ShadyDOMLazyTree.insertTreeBefore
-  DOMLazyTree.replaceChildWithTree = ShadyDOMLazyTree.replaceChildWithTree
-  DOMLazyTree.queueChild = ShadyDOMLazyTree.queueChild
-  DOMLazyTree.queueHTML = ShadyDOMLazyTree.queueHTML
-  DOMLazyTree.queueText = ShadyDOMLazyTree.queueText
 }
 
 exports.registerEvent = registerEvent

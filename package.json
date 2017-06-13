@@ -4,10 +4,11 @@
   "description": "Use Polymer elements in React",
   "main": "index.js",
   "scripts": {
-    "pretest": "standard && vulcanize --inline-scripts --inline-css --strip-comments test/source.html | node test/transform-build > test/build.html",
+    "pretest": "standard && node test/build test/source.html | node test/transform-build > test/build.html",
     "test": "zuul -- test/test.js",
     "pretest-local": "npm run pretest",
-    "test-local": "zuul --no-coverage --local 8088 -- test/test.js"
+    "test-local": "zuul --no-coverage --local 8088 -- test/test.js",
+    "build-demo": "browserify demo/index-source.js -o demo/index-browserify.js -t [ babelify --presets [ es2015 react ] ] && node test/build demo/index-source.html > demo/index.html"
   },
   "browserify": {
     "transform": [
@@ -41,14 +42,16 @@
   "bugs": "https://github.com/jscissr/react-polymer/issues",
   "homepage": "https://github.com/jscissr/react-polymer#readme",
   "devDependencies": {
+    "babel-core": "^6.25.0",
     "babel-preset-react": "^6.11.1",
     "browserify": "^14.1.0",
+    "merge-stream": "^1.0.1",
+    "polymer-build": "^1.5.1",
     "react": "^15.4.0",
     "react-addons-test-utils": "^15.4.0",
     "react-dom": "^15.4.0",
     "standard": "^10.0.2",
     "tape": "^4.4.0",
-    "vulcanize": "^1.14.1",
     "zuul": "^3.9.0"
   },
   "peerDependencies": {

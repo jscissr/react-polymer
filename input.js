@@ -5,7 +5,6 @@ var PropTypes = require('prop-types')
 var assign = require('object-assign')
 
 reactPolymer.registerEvent('change', {onChange: true}, {onChangeCapture: true})
-reactPolymer.registerEvent('bind-value-changed', {onBindValueChanged: true}, {onBindValueChangedCapture: true})
 reactPolymer.registerEvent('immediate-value-change', {onImmediateValueChange: true}, {onImmediateValueChangeCapture: true})
 reactPolymer.registerEvent('iron-select', {onIronSelect: true}, {onIronSelectCapture: true})
 
@@ -52,7 +51,7 @@ function createTextClass (PolymerText, displayName) {
     render () {
       var props = {
         onChange: null,
-        onBindValueChanged: this._onChange
+        onInput: this._onChange
       }
       if (PolymerText === 'iron-autogrow-textarea') {
         props.value = null
@@ -98,9 +97,9 @@ function createSelectorClass (PolymerSelector, displayName) {
       selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     },
     _onChange (event) {
-      if (this.props.onChange) this.props.onChange.call(undefined, event)
-
       var target = event.target
+
+      if (this.props.onChange && this.props.selected !== target.selected) this.props.onChange.call(undefined, event)
       ReactUpdates.asap(() => {
         if (this.props.selected != null) target.selected = this.props.selected
       })
@@ -111,7 +110,6 @@ function createSelectorClass (PolymerSelector, displayName) {
   })
 }
 
-exports.PaperMenu = createSelectorClass('paper-menu', 'PaperMenu')
 exports.PaperListbox = createSelectorClass('paper-listbox', 'PaperListbox')
 exports.PaperRadioGroup = createSelectorClass('paper-radio-group', 'PaperRadioGroup')
 exports.PaperTabs = createSelectorClass('paper-tabs', 'PaperTabs')

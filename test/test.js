@@ -11,7 +11,6 @@ import {
   PaperTextarea,
   IronAutogrowTextarea,
   PaperSlider,
-  PaperMenu,
   PaperListbox,
   PaperRadioGroup,
   PaperTabs,
@@ -21,6 +20,11 @@ import {
 reactPolymer.registerEvent('iron-change', {onIronChange: true}, {onIronChangeCapture: true})
 reactPolymer.registerEvent('change', {onChange: true})
 reactPolymer.registerAttribute('drawer')
+
+function expectedClass (className, xScope) {
+  if (window.ShadyCSS.nativeCss) return className
+  return className + ' ' + xScope
+}
 
 function renderContainer (element) {
   var container = document.createElement('div')
@@ -138,7 +142,7 @@ test('react-polymer adds classes to Polymer elements', t => {
   t.plan(1)
   t.timeoutAfter(2000)
 
-  renderContainer(<paper-checkbox className='blue' ref={immediateRef(ref => t.equal(ref.className, 'blue x-scope paper-checkbox-1'))} />)
+  renderContainer(<paper-checkbox className='blue' ref={immediateRef(ref => t.equal(ref.className, expectedClass('blue', 'x-scope paper-checkbox-1')))} />)
 })
 
 test('react-polymer keeps Polymer classes when React classes change', t => {
@@ -152,11 +156,11 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
     },
     componentDidMount () {
       setImmediate(() => {
-        t.equal(checkBox.className, 'red x-scope paper-checkbox-1')
+        t.equal(checkBox.className, expectedClass('red', 'x-scope paper-checkbox-1'))
 
         this.setState({lamp: 'green'})
         setImmediate(() => {
-          t.equal(checkBox.className, 'green x-scope paper-checkbox-1')
+          t.equal(checkBox.className, expectedClass('green', ' x-scope paper-checkbox-2'))
         })
       })
     },
@@ -167,7 +171,7 @@ test('react-polymer keeps Polymer classes when React classes change', t => {
   renderContainer(<Wrapper />)
 })
 
-test('react-polymer keeps Polymer classes when React classes are removed', t => {
+test('react-polymer removes classes', t => {
   t.plan(1)
   t.timeoutAfter(2000)
 
@@ -180,7 +184,7 @@ test('react-polymer keeps Polymer classes when React classes are removed', t => 
       setImmediate(() => {
         this.setState({hasClass: false})
         setImmediate(() => {
-          t.equal(checkBox.className, 'x-scope paper-checkbox-1')
+          t.equal(checkBox.className, expectedClass('', ' x-scope paper-checkbox-2'))
         })
       })
     },
@@ -190,259 +194,6 @@ test('react-polymer keeps Polymer classes when React classes are removed', t => 
     }
   })
   renderContainer(<Wrapper />)
-})
-
-test('use Polymer.dom API for initial subtree render', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var menu = renderContainer(
-    <paper-menu>
-      <paper-item />
-    </paper-menu>
-  )
-
-  setImmediate(() => {
-    var checkbox = menu.querySelector('div > paper-item')
-    t.ok(checkbox)
-  })
-})
-
-test('use Polymer.dom API for element insertion', t => {
-  t.plan(2)
-  t.timeoutAfter(2000)
-
-  var instance
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {hasChild: false}
-    },
-    render () {
-      instance = this
-      return (
-        <paper-radio-group>
-          {this.state.hasChild && <paper-checkbox />}
-        </paper-radio-group>
-      )
-    }
-  })
-
-  var selector = renderContainer(<Wrapper />)
-
-  setImmediate(() => {
-    instance.setState({hasChild: true})
-    setImmediate(() => {
-      var checkbox = selector.querySelector('paper-checkbox')
-      t.ok(checkbox)
-      checkbox.fire('down')
-      setImmediate(() => {
-        t.ok(selector.querySelector('paper-checkbox'))
-      })
-    })
-  })
-})
-
-test('Polymer.dom API is used for initial textContent', t => {
-  t.plan(2)
-  t.timeoutAfter(2000)
-
-  var menu = renderContainer(<paper-menu>hello</paper-menu>)
-
-  setImmediate(() => {
-    t.ok(menu.querySelector('div'))
-    t.ok(menu.querySelector('div').textContent.indexOf('hello') !== -1)
-  })
-})
-
-test('Polymer.dom API is used for textContent updates', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var instance
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {hasChild: false}
-    },
-    render () {
-      instance = this
-      return <paper-tab>{this.state.hasChild && 'hello'}</paper-tab>
-    }
-  })
-
-  var tab = renderContainer(<Wrapper />)
-
-  setImmediate(() => {
-    instance.setState({hasChild: true})
-    tab.distributeContent()
-    setImmediate(() => {
-      t.ok(tab.firstElementChild.textContent.indexOf('hello') !== -1)
-    })
-  })
-})
-
-test('Polymer.dom API is used for initial innerHTML', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var menu = renderContainer(<paper-menu dangerouslySetInnerHTML={{__html: '<br>'}} />)
-
-  setImmediate(() => {
-    t.ok(menu.querySelector('div > br'))
-  })
-})
-
-test('Polymer.dom API is used for innerHTML updates', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var instance
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {html: undefined}
-    },
-    render () {
-      instance = this
-      return <paper-menu dangerouslySetInnerHTML={this.state.html && {__html: '<br>'}} />
-    }
-  })
-
-  var menu = renderContainer(<Wrapper />)
-
-  setImmediate(() => {
-    instance.setState({html: true})
-    setImmediate(() => {
-      t.ok(menu.querySelector('div > br'))
-    })
-  })
-})
-
-test('Polymer.dom API is used for moving elements', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var instance
-  var childs = [<span key='a' />, <paper-item key='b' />]
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {swap: false}
-    },
-    render () {
-      instance = this
-      return (
-        <paper-menu>
-          {childs}
-        </paper-menu>
-      )
-    }
-  })
-
-  var menu = renderContainer(<Wrapper />)
-
-  setImmediate(() => {
-    childs.push(childs.shift())
-    instance.setState({swap: true})
-    setImmediate(() => {
-      t.ok(menu.querySelector('div > paper-item + span'))
-    })
-  })
-})
-
-test('Polymer.dom API is used for initial multiple textContent', t => {
-  t.plan(2)
-  t.timeoutAfter(2000)
-
-  var menu = renderContainer(<paper-menu>hello{'world'}</paper-menu>)
-
-  setImmediate(() => {
-    t.ok(menu.querySelector('div'))
-    t.ok(menu.querySelector('div').textContent.indexOf('helloworld') !== -1)
-  })
-})
-
-test('Polymer.dom API is used for multiple textContent add/remove/update', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var instance
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {first: '', second: 'foo', third: 'bar'}
-    },
-    render () {
-      instance = this
-      return <paper-tab>{this.state.first}{this.state.second}{this.state.third}</paper-tab>
-    }
-  })
-
-  var tab = renderContainer(<Wrapper />)
-
-  setImmediate(() => {
-    instance.setState({first: 'hello', second: '', third: 'world'})
-    tab.distributeContent()
-    setImmediate(() => {
-      t.ok(tab.firstElementChild.textContent.indexOf('helloworld') !== -1)
-    })
-  })
-})
-
-test('Polymer.dom API is used for switching child type', t => {
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var instance
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {content: <br />}
-    },
-    render () {
-      instance = this
-      return this.state.content
-    }
-  })
-
-  var tab = renderContainer(<paper-tab><Wrapper /></paper-tab>)
-
-  setImmediate(() => {
-    instance.setState({content: <span>bar</span>})
-    tab.distributeContent()
-    setImmediate(() => {
-      t.ok(tab.querySelector('div > span'))
-    })
-  })
-})
-
-test('Polymer.dom API is used for removing non-root elements', t => {
-  // Meaning that the Polymer component has a wrapper arround <content />.
-  t.plan(1)
-  t.timeoutAfter(2000)
-
-  var instance
-
-  var Wrapper = React.createClass({
-    getInitialState () {
-      return {hasChild: true}
-    },
-    render () {
-      instance = this
-      return <paper-tab>{this.state.hasChild && <div className='something' />}</paper-tab>
-    }
-  })
-
-  var tab = renderContainer(<Wrapper />)
-
-  setImmediate(() => {
-    instance.setState({hasChild: false})
-    tab.distributeContent()
-    setImmediate(() => {
-      t.notOk(tab.querySelector('.something'))
-    })
-  })
 })
 
 // ### Polymer input wrapper ###
@@ -527,6 +278,10 @@ testToggle('PaperToggleButton', PaperToggleButton)
 // text
 
 function testText (name, Text, nativeName) {
+  function findNative (text) {
+    if (name === 'PaperTextarea') text = text.shadowRoot.querySelector('iron-autogrow-textarea')
+    return text.shadowRoot.querySelector(nativeName)
+  }
   generalInputTest({
     name,
     element: <Text />,
@@ -534,9 +289,9 @@ function testText (name, Text, nativeName) {
     valueBefore: 'Hello',
     valueAfter: 'Hello world!',
     interact: text => {
-      var nativeText = text.querySelector(nativeName)
+      var nativeText = findNative(text)
       nativeText.value = 'Hello world!'
-      nativeText.dispatchEvent(new Event('input', {bubbles: true}))
+      nativeText.dispatchEvent(new Event('input', {bubbles: true, composed: true}))
       // no change event, update should happen on every keystroke
     }
   })
@@ -548,7 +303,7 @@ function testText (name, Text, nativeName) {
     var text = renderContainer(<Text value='Hello world!' />)
 
     setImmediate(() => {
-      var nativeText = text.querySelector(nativeName)
+      var nativeText = findNative(text)
       t.ok(nativeText)
       t.equal(nativeText.value, 'Hello world!')
     })
@@ -568,7 +323,7 @@ generalInputTest({
   valueBefore: 20,
   valueAfter: 100,
   interact: slider => {
-    var sliderKnob = slider.querySelector('#sliderKnob')
+    var sliderKnob = slider.shadowRoot.querySelector('#sliderKnob')
     sliderKnob.dispatchEvent(new CustomEvent('track', {detail: {state: 'track', dx: 1000}}))
   }
 })
@@ -591,7 +346,6 @@ function testSelector (name, Selector, Item) {
   })
 }
 
-testSelector('PaperMenu', PaperMenu, 'paper-item')
 testSelector('PaperListbox', PaperListbox, 'paper-item')
 testSelector('PaperRadioGroup', PaperRadioGroup, 'paper-radio-button')
 testSelector('PaperTabs', PaperTabs, 'paper-tab')
