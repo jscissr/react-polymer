@@ -8,6 +8,8 @@
 
 *Use Polymer elements in React*
 
+react-polymer now supports Polymer 2.0! If you need to use Polymer 1.0 please use v3
+
 Since [this change](https://github.com/facebook/react/pull/1551) you can put
 Polymer elements into React components and at first glance it just works:
 
