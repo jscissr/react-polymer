@@ -18,180 +18,178 @@ import {
 
 reactPolymer.registerEvent('color-picker-selected', 'onColorPickerSelected')
 
-var App = React.createClass({
-  getInitialState () {
-    return {
-      text: 'Hello world',
-      textarea: 'Hello world\nin 2 lines',
-      value: 30,
-      checked: false,
-      editable: true,
-      selected: 'small',
-      color: ''
-    }
-  },
+function App () {
+  const c = new React.Component()
+  c.state = {
+    text: 'Hello world',
+    textarea: 'Hello world\nin 2 lines',
+    value: 30,
+    checked: false,
+    editable: true,
+    selected: 'small',
+    color: ''
+  }
 
-  textChange (event) {
+  function textChange (event) {
     console.log('textChange, new value: %s', event.target.value)
-    if (this.state.editable) {
-      this.setState({text: event.target.value})
+    if (c.state.editable) {
+      c.setState({text: event.target.value})
     }
-  },
-  textareaChange (event) {
+  }
+  function textareaChange (event) {
     console.log('textareaChange, new value: %s', event.target.value)
-    if (this.state.editable) {
-      this.setState({textarea: event.target.value})
+    if (c.state.editable) {
+      c.setState({textarea: event.target.value})
     }
-  },
-  valueChange (event) {
+  }
+  function valueChange (event) {
     console.log('valueChange, new value: %s', event.target.value)
-    if (this.state.editable) {
-      this.setState({value: +event.target.value})
+    if (c.state.editable) {
+      c.setState({value: +event.target.value})
     }
-  },
-  checkedChange (event) {
+  }
+  function checkedChange (event) {
     console.log('checkedChange, new value: %s', event.target.checked)
-    if (this.state.editable) {
-      this.setState({checked: event.target.checked})
+    if (c.state.editable) {
+      c.setState({checked: event.target.checked})
     }
-  },
-  selectedChange (event) {
+  }
+  function selectedChange (event) {
     var selected = event.target.selected || event.target.value
     console.log('selectedChange, new value: %s', selected)
-    if (this.state.editable) {
-      this.setState({selected: selected})
+    if (c.state.editable) {
+      c.setState({selected: selected})
     }
-  },
+  }
 
-  editableChange (event) {
-    this.setState({editable: event.target.checked})
-  },
+  function editableChange (event) {
+    c.setState({editable: event.target.checked})
+  }
 
-  colorChange (event) {
-    this.setState({color: event.target.color})
-  },
+  function colorChange (event) {
+    c.setState({color: event.target.color})
+  }
 
-  render () {
-    return (
-      <div>
-        <h1>react-polymer demo</h1>
+  c.render = () => (
+    <div>
+      <h1>react-polymer demo</h1>
 
-        <table>
-          <tbody>
-            <tr>
-              <td />
-              <td>Native</td>
-              <td>Paper</td>
-              <td>Iron</td>
-            </tr>
-            <tr>
-              <td>Text</td>
-              <td><input type='text' value={this.state.text} onChange={this.textChange} /></td>
-              <td><PaperInput label='Label' value={this.state.text} onChange={this.textChange} /></td>
-              <td>
-                <iron-input>
-                  <input value={this.state.text} onChange={this.textChange} />
-                </iron-input>
-              </td>
-            </tr>
-            <tr>
-              <td>Textarea</td>
-              <td><textarea value={this.state.textarea} onChange={this.textareaChange} /></td>
-              <td><PaperTextarea label='Label' value={this.state.textarea} onChange={this.textareaChange} /></td>
-              <td><IronAutogrowTextarea value={this.state.textarea} onChange={this.textareaChange} /></td>
-            </tr>
-            <tr>
-              <td>Slider</td>
-              <td><input type='range' value={this.state.value} onChange={this.valueChange} /></td>
-              <td><PaperSlider value={this.state.value} onChange={this.valueChange} /></td>
-              <td />
-            </tr>
-            <tr>
-              <td rowSpan='2'>Checkbox</td>
-              <td rowSpan='2'><input type='checkbox' checked={this.state.checked} onChange={this.checkedChange} /></td>
-              <td><PaperCheckbox checked={this.state.checked} onChange={this.checkedChange}>Label</PaperCheckbox></td>
-              <td rowSpan='2' />
-            </tr>
-            <tr>
-              <td><PaperToggleButton checked={this.state.checked} onChange={this.checkedChange} /></td>
-            </tr>
-            <tr>
-              <td>Radio</td>
-              <td>
-                <label><input type='radio' name='size' value='small' checked={this.state.selected === 'small'} onChange={this.selectedChange} /> Small</label>
-                <label><input type='radio' name='size' value='medium' checked={this.state.selected === 'medium'} onChange={this.selectedChange} /> Medium</label>
-                <label><input type='radio' name='size' value='large' checked={this.state.selected === 'large'} onChange={this.selectedChange} /> Large</label>
-              </td>
-              <td>
-                <PaperRadioGroup selected={this.state.selected} onChange={this.selectedChange}>
-                  <paper-radio-button name='small'>Small</paper-radio-button>
-                  <paper-radio-button name='medium'>Medium</paper-radio-button>
-                  <paper-radio-button name='large'>Large</paper-radio-button>
-                </PaperRadioGroup>
-              </td>
-              <td />
-            </tr>
-            <tr>
-              <td>Dropdown</td>
-              <td>
-                <label>
-                  Size <select value={this.state.selected} onChange={this.selectedChange}>
-                    <option value='small'>Small</option>
-                    <option value='medium'>Medium</option>
-                    <option value='large'>Large</option>
-                  </select>
-                </label>
-              </td>
-              <td>
-                <paper-dropdown-menu label='Size'>
-                  <PaperListbox slot='dropdown-content' attr-for-selected='value' selected={this.state.selected} onChange={this.selectedChange}>
-                    <paper-item value='small'>Small</paper-item>
-                    <paper-item value='medium'>Medium</paper-item>
-                    <paper-item value='large'>Large</paper-item>
-                  </PaperListbox>
-                </paper-dropdown-menu>
-              </td>
-              <td />
-            </tr>
-            <tr>
-              <td rowSpan='2'>Selector</td>
-              <td rowSpan='2' />
-              <td>
-                <PaperTabs attr-for-selected='value' selected={this.state.selected} onChange={this.selectedChange}>
-                  <paper-tab value='small'>Small</paper-tab>
-                  <paper-tab value='medium'>Medium</paper-tab>
-                  <paper-tab value='large'>Large</paper-tab>
-                </PaperTabs>
-              </td>
-              <td rowSpan='2'>
-                <IronSelector attr-for-selected='name' selected={this.state.selected} onChange={this.selectedChange}>
-                  <div name='small'>Small</div>
-                  <div name='medium'>Medium</div>
-                  <div name='large'>Large</div>
-                </IronSelector>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <PaperListbox attr-for-selected='value' selected={this.state.selected} onChange={this.selectedChange}>
+      <table>
+        <tbody>
+          <tr>
+            <td />
+            <td>Native</td>
+            <td>Paper</td>
+            <td>Iron</td>
+          </tr>
+          <tr>
+            <td>Text</td>
+            <td><input type='text' value={c.state.text} onChange={textChange} /></td>
+            <td><PaperInput label='Label' value={c.state.text} onChange={textChange} /></td>
+            <td>
+              <iron-input>
+                <input value={c.state.text} onChange={textChange} />
+              </iron-input>
+            </td>
+          </tr>
+          <tr>
+            <td>Textarea</td>
+            <td><textarea value={c.state.textarea} onChange={textareaChange} /></td>
+            <td><PaperTextarea label='Label' value={c.state.textarea} onChange={textareaChange} /></td>
+            <td><IronAutogrowTextarea value={c.state.textarea} onChange={textareaChange} /></td>
+          </tr>
+          <tr>
+            <td>Slider</td>
+            <td><input type='range' value={c.state.value} onChange={valueChange} /></td>
+            <td><PaperSlider value={c.state.value} onChange={valueChange} /></td>
+            <td />
+          </tr>
+          <tr>
+            <td rowSpan='2'>Checkbox</td>
+            <td rowSpan='2'><input type='checkbox' checked={c.state.checked} onChange={checkedChange} /></td>
+            <td><PaperCheckbox checked={c.state.checked} onChange={checkedChange}>Label</PaperCheckbox></td>
+            <td rowSpan='2' />
+          </tr>
+          <tr>
+            <td><PaperToggleButton checked={c.state.checked} onChange={checkedChange} /></td>
+          </tr>
+          <tr>
+            <td>Radio</td>
+            <td>
+              <label><input type='radio' name='size' value='small' checked={c.state.selected === 'small'} onChange={selectedChange} /> Small</label>
+              <label><input type='radio' name='size' value='medium' checked={c.state.selected === 'medium'} onChange={selectedChange} /> Medium</label>
+              <label><input type='radio' name='size' value='large' checked={c.state.selected === 'large'} onChange={selectedChange} /> Large</label>
+            </td>
+            <td>
+              <PaperRadioGroup selected={c.state.selected} onChange={selectedChange}>
+                <paper-radio-button name='small'>Small</paper-radio-button>
+                <paper-radio-button name='medium'>Medium</paper-radio-button>
+                <paper-radio-button name='large'>Large</paper-radio-button>
+              </PaperRadioGroup>
+            </td>
+            <td />
+          </tr>
+          <tr>
+            <td>Dropdown</td>
+            <td>
+              <label>
+                Size <select value={c.state.selected} onChange={selectedChange}>
+                  <option value='small'>Small</option>
+                  <option value='medium'>Medium</option>
+                  <option value='large'>Large</option>
+                </select>
+              </label>
+            </td>
+            <td>
+              <paper-dropdown-menu label='Size'>
+                <PaperListbox slot='dropdown-content' attr-for-selected='value' selected={c.state.selected} onChange={selectedChange}>
                   <paper-item value='small'>Small</paper-item>
                   <paper-item value='medium'>Medium</paper-item>
                   <paper-item value='large'>Large</paper-item>
                 </PaperListbox>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </paper-dropdown-menu>
+            </td>
+            <td />
+          </tr>
+          <tr>
+            <td rowSpan='2'>Selector</td>
+            <td rowSpan='2' />
+            <td>
+              <PaperTabs attr-for-selected='value' selected={c.state.selected} onChange={selectedChange}>
+                <paper-tab value='small'>Small</paper-tab>
+                <paper-tab value='medium'>Medium</paper-tab>
+                <paper-tab value='large'>Large</paper-tab>
+              </PaperTabs>
+            </td>
+            <td rowSpan='2'>
+              <IronSelector attr-for-selected='name' selected={c.state.selected} onChange={selectedChange}>
+                <div name='small'>Small</div>
+                <div name='medium'>Medium</div>
+                <div name='large'>Large</div>
+              </IronSelector>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <PaperListbox attr-for-selected='value' selected={c.state.selected} onChange={selectedChange}>
+                <paper-item value='small'>Small</paper-item>
+                <paper-item value='medium'>Medium</paper-item>
+                <paper-item value='large'>Large</paper-item>
+              </PaperListbox>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-        <p><label><input type='checkbox' checked={this.state.editable} onChange={this.editableChange} /> fields editable</label></p>
+      <p><label><input type='checkbox' checked={c.state.editable} onChange={editableChange} /> fields editable</label></p>
 
-        <p>Changing className (should keep styling): <PaperToggleButton className={'c' + Math.floor(Math.random() * 9999) + ' other-class'} /></p>
+      <p>Changing className (should keep styling): <PaperToggleButton className={'c' + Math.floor(Math.random() * 9999) + ' other-class'} /></p>
 
-        <p>Color picker: <paper-swatch-picker onColorPickerSelected={this.colorChange} />{this.state.color && ` selected: ${this.state.color}`}</p>
-      </div>
-    )
-  }
-})
+      <p>Color picker: <paper-swatch-picker onColorPickerSelected={colorChange} />{c.state.color && ` selected: ${c.state.color}`}</p>
+    </div>
+  )
+  return c
+}
 
 setTimeout(
   () => render(<App />, document.getElementById('react-main')),
