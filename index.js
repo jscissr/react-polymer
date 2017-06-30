@@ -54,7 +54,7 @@ function registerEvent (name, bubbled, captured = bubbled + 'Capture') {
   if (typeof bubbled !== 'string') throw new TypeError()
   injectAll()
 
-  if (registeredEvents.some(reg => reg.name === name || reg.bubbled === bubbled)) {
+  if (registeredEvents.some(function (reg) { reg.name === name || reg.bubbled === bubbled })) {
     return
   }
   registeredEvents.push({name: name, bubbled: bubbled})
