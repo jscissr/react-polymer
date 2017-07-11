@@ -24,10 +24,7 @@ var ReactPolymerPlugin = {
       targetInst,
       nativeEvent,
       nativeEventTarget) {
-    var targetNode = targetInst && ReactDOMComponentTree.getNodeFromInstance(targetInst)
-
-    if (!customTopLevelTypes.hasOwnProperty(topLevelType) ||
-        !isPolymerElement(targetNode)) {
+    if (!customTopLevelTypes.hasOwnProperty(topLevelType)) {
       return null
     }
     var event = SyntheticEvent.getPooled(
