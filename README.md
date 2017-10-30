@@ -93,10 +93,8 @@ This module does a lot of monkey patching on internal APIs of react-dom, so it o
 
 ## Notes
 
-Some React issues that might simplify this once solved:
+A React issue that might simplify this once solved:
 
-- https://github.com/facebook/react/issues/4933
-- https://github.com/facebook/react/issues/140
 - https://github.com/facebook/react/issues/4751
 
 ## Similar Libraries
